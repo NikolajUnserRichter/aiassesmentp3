@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P3 AI Risk Assessment Tool</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d3561 0%, #1a1f3a 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            color: #555;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: #e8e9ea;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 25px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3561;
+            margin: 0 0 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        /* Style adjustments for multiselect */
+        select[multiple] {
+            height: auto; /* Allow height to adjust for multiple options */
+            min-height: 100px;
+        }
+
+        .result-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .result-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3561;
+        }
+
+        .risk-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .risk-critical { background: #fee; color: #c00; }
+        .risk-high { background: #ffeaa7; color: #d63031; }
+        .risk-medium { background: #fff3cd; color: #856404; }
+        .risk-low { background: #d4edda; color: #155724; }
+        .risk-minimal { background: #e3f2fd; color: #0d47a1; }
+
+        .measure-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .measure-title {
+            font-weight: 600;
+            color: #2d3561;
+            margin-bottom: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #0d47a1;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div style="text-align: left; padding: 0 20px; font-weight: 900; font-size: 24px; color: #2d3561; margin-bottom: 20px;">P3</div>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 P3 AI Risk Assessment Tool</h1>
+            <p>Strategische Bewertung von KI-Systemen für Consulting-Projekte</p>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('assessment')">Assessment</div>
+            <div class="tab" onclick="showTab('results')">Risiko-Analyse</div>
+            <div class="tab" onclick="showTab('measures')">Empfehlungen</div>
+        </div>
+
+        <div id="assessment" class="tab-content active">
+            <div class="content">
+                <div class="form-grid">
+                    <div class="form-section">
+                        <h3 class="section-title">Projekt & KI-System Kontext</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Projekttyp / Bereich:</label>
+                            <select id="projectType" onchange="calculateRisk()">
+                                <option value="">Bitte wählen...</option>
+                                <option value="strategy">Strategieberatung & Business Development</option>
+                                <option value="digital_transformation">Digitale Transformation</option>
+                                <option value="process_optimization">Prozessoptimierung & Change Management</option>
+                                <option value="software_development">Softwareentwicklung & Implementation</option>
+                                <option value="data_analytics">Data Analytics & AI Solutions</option>
+                                <option value="automotive">Automotive Engineering & Mobility</option>
+                                <option value="internal_operations">Interne P3-Operationen</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">KI-Tool / System:</label>
+                            <select id="aiTool" onchange="calculateRisk()">
+                                <option value="">Bitte wählen...</option>
+                                <option value="m365_copilot">✅ M365 Copilot (freigegeben)</option>
+                                <option value="ai_builder">✅ AI Builder in Power Platform (freigegeben)</option>
+                                <option value="other">⚠️ Anderes KI-System (Genehmigung erforderlich)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">KI-Anwendungsfall:</label>
+                            <select id="aiUseCase" onchange="calculateRisk()" multiple>
+                                <option value="">Bitte wählen...</option>
+                                <option value="client_advisory">Client Advisory & Insight Generation</option>
+                                <option value="predictive_analytics">Predictive Analytics & Forecasting</option>
+                                <option value="automation">Prozessautomatisierung</option>
+                                <option value="decision_support">Decision Support System</option>
+                                <option value="nlp_analysis">NLP & Document Analysis</option>
+                                <option value="code_generation">Code Generation & Testing</option>
+                                <option value="resource_allocation">Resource & Project Allocation</option>
+                                <option value="risk_assessment">Risk Assessment & Compliance</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Verarbeitete Datentypen:</label>
+                            <select id="dataType" onchange="calculateRisk()" multiple>
+                                <option value="">Bitte wählen...</option>
+                                <option value="public_only">Ausschließlich öffentliche Daten</option>
+                                <option value="company_general">Allgemeine Unternehmensdaten (anonymisiert)</option>
+                                <option value="client_confidential">Vertrauliche Kundendaten</option>
+                                <option value="strategic_sensitive">Strategisch sensible Informationen</option>
+                                <option value="personal_data">Personenbezogene Daten (Mitarbeiter/Kunden)</option>
+                                <option value="special_categories">Besondere Kategorien personenbezogener Daten</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">KI-System Eigenschaften</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Autonomiegrad:</label>
+                            <select id="autonomy" onchange="calculateRisk()">
+                                <option value="">Bitte wählen...</option>
+                                <option value="support_only">Unterstützung: KI generiert Vorschläge/Insights</option>
+                                <option value="interactive">Interaktiv: KI kommuniziert mit Stakeholdern</option>
+                                <option value="semi_automated">Semi-automatisiert: KI trifft Vorentscheidungen</option>
+                                <option value="automated">Automatisiert: KI trifft finale Entscheidungen</option>
+                                <option value="critical_automated">Kritisch: KI trifft Entscheidungen mit hoher Tragweite</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Auswirkungsbereich:</label>
+                            <select id="impact" onchange="calculateRisk()">
+                                <option value="">Bitte wählen...</option>
+                                <option value="internal_efficiency">Interne Effizienz (low impact)</option>
+                                <option value="project_support">Projektunterstützung (medium impact)</option>
+                                <option value="client_deliverable">Client Deliverable (high impact)</option>
+                                <option value="strategic_decision">Strategische Entscheidungsgrundlage</option>
+                                <option value="critical_operations">Kritische Geschäftsprozesse</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">KI-System Transparenz:</label>
+                            <select id="transparency" onchange="calculateRisk()">
+                                <option value="">Bitte wählen...</option>
+                                <option value="high">Hoch: Entscheidungen vollständig nachvollziehbar</option>
+                                <option value="medium">Mittel: Wesentliche Faktoren erklärbar</option>
+                                <option value="low">Gering: Black-Box System</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>⚠️ P3 AI Policy:</strong> Aktuell sind nur folgende KI-Tools für den Einsatz freigegeben:
+                    <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                        <li><strong>AI Builder in Power Platform</strong> - für Automatisierung und intelligente Workflows</li>
+                        <li><strong>M365 Copilot</strong> - für Produktivitätssteigerung in Microsoft 365</li>
+                    </ul>
+                    Andere KI-Systeme erfordern eine Genehmigung durch das P3 Management.
+                </div>
+                
+                <div class="info-box" style="margin-top: 15px;">
+                    <strong>Hinweis:</strong> Dieses Tool bietet eine erste Einschätzung zur Risikobewertung von KI-Systemen 
+                    im Kontext der P3-Beratungsprojekte unter Berücksichtigung des EU AI Acts und DSGVO.
+                </div>
+            </div>
+        </div>
+
+        <div id="results" class="tab-content">
+            <div class="content">
+                <div id="resultsContent">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <p>Bitte führen Sie zunächst das Assessment durch.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="measures" class="tab-content">
+            <div class="content">
+                <div id="measuresContent">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✅</div>
+                        <p>Bitte führen Sie zunächst das Assessment durch.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="downloadPDF()">📄 Assessment exportieren (CSV)</button>
+            <button class="btn btn-secondary" onclick="resetForm()">🔄 Neues Assessment</button>
+        </div>
+    </div>
+
+    <script>
+        let currentAssessment = null;
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            // Check if event is defined and use it, otherwise rely on the default behavior if called programmatically
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                // Fallback for programmatic call if needed
+                const activeTabElement = document.querySelector(`.tab[onclick="showTab('${tabName}')"]`);
+                if (activeTabElement) activeTabElement.classList.add('active');
+            }
+        }
+        
+        // Helper to get selected values from (multi-)select
+        function getSelectedValues(selectId) {
+            const select = document.getElementById(selectId);
+            if (select.multiple) {
+                return Array.from(select.selectedOptions).map(option => option.value).filter(value => value !== '');
+            } else {
+                return select.value;
+            }
+        }
+
+        // Helper to get max risk score from a set of data types for multi-select
+        function getCombinedDataScore(dataTypes) {
+            const dataScores = {
+                'public_only': 0,
+                'company_general': 1,
+                'client_confidential': 2,
+                'strategic_sensitive': 3,
+                'personal_data': 4,
+                'special_categories': 5
+            };
+            
+            if (!Array.isArray(dataTypes) || dataTypes.length === 0) return 0;
+            
+            // The overall risk should be based on the most sensitive data type being processed
+            return Math.max(...dataTypes.map(type => dataScores[type] || 0));
+        }
+        
+        function getSelectedLabels(selectId) {
+            const select = document.getElementById(selectId);
+            if (select.multiple) {
+                return Array.from(select.selectedOptions).map(option => option.text).filter(text => text !== 'Bitte wählen...');
+            } else {
+                const selectedOption = select.options[select.selectedIndex];
+                return selectedOption ? selectedOption.text : '';
+            }
+        }
+
+
+        function calculateRisk() {
+            const projectType = getSelectedValues('projectType');
+            const aiTool = getSelectedValues('aiTool');
+            const aiUseCases = getSelectedValues('aiUseCase'); // Multi-select
+            const dataTypes = getSelectedValues('dataType'); // Multi-select
+            const autonomy = getSelectedValues('autonomy');
+            const impact = getSelectedValues('impact');
+            const transparency = getSelectedValues('transparency');
+            
+            // Check if mandatory single-select fields are filled. For multi-select, check if at least one value is selected.
+            if (!projectType || !aiTool || aiUseCases.length === 0 || dataTypes.length === 0 || !autonomy || !impact || !transparency) {
+                return;
+            }
+            
+            currentAssessment = performAssessment(projectType, aiTool, aiUseCases, dataTypes, autonomy, impact, transparency);
+            updateResults(currentAssessment);
+        }
+
+        function performAssessment(projectType, aiTool, aiUseCases, dataTypes, autonomy, impact, transparency) {
+            let riskScore = 0;
+            let measures = [];
+            
+            // AI Tool approval check - CRITICAL
+            if (aiTool === 'other') {
+                riskScore += 3; // Significant penalty for unapproved tools
+                measures.push({
+                    title: '🚨 GENEHMIGUNG ERFORDERLICH',
+                    description: 'Dieses KI-System ist nicht freigegeben! Gemäß P3 AI Policy ist vor dem Einsatz eine formelle Genehmigung durch das Management einzuholen. Bitte wenden Sie sich an Ihre Führungskraft oder das IT-Governance Team.'
+                });
+            }
+            
+            // Autonomy risk scoring
+            const autonomyScores = {
+                'support_only': 1,
+                'interactive': 2,
+                'semi_automated': 3,
+                'automated': 4,
+                'critical_automated': 5
+            };
+            riskScore += autonomyScores[autonomy] || 0;
+            
+            // Data sensitivity scoring (using combined score from the most sensitive type)
+            const maxDataScore = getCombinedDataScore(dataTypes);
+            riskScore += maxDataScore;
+            
+            // Impact scoring
+            const impactScores = {
+                'internal_efficiency': 1,
+                'project_support': 2,
+                'client_deliverable': 3,
+                'strategic_decision': 4,
+                'critical_operations': 5
+            };
+            riskScore += impactScores[impact] || 0;
+            
+            // Transparency adjustment
+            if (transparency === 'low') riskScore += 2;
+            else if (transparency === 'medium') riskScore += 1;
+            
+            // Determine risk level
+            let riskLevel = 'minimal';
+            if (aiTool === 'other' || riskScore >= 13) riskLevel = 'critical';
+            else if (riskScore >= 10) riskLevel = 'high';
+            else if (riskScore >= 7) riskLevel = 'medium';
+            else if (riskScore >= 4) riskLevel = 'low';
+            
+            // Generate recommendations
+            measures = generateMeasures(riskLevel, aiTool, autonomy, dataTypes, impact, transparency, aiUseCases, measures);
+            
+            return {
+                riskLevel,
+                riskScore,
+                projectType,
+                aiTool,
+                aiUseCases, // updated to array
+                dataTypes, // updated to array
+                autonomy,
+                impact,
+                transparency,
+                measures
+            };
+        }
+
+        function generateMeasures(riskLevel, aiTool, autonomy, dataTypes, impact, transparency, aiUseCases, measures) {
+            // Note: measures array may already contain approval warning from performAssessment
+            
+            // Approved tools get positive reinforcement
+            if (aiTool === 'm365_copilot' || aiTool === 'ai_builder') {
+                measures.push({
+                    title: '✅ P3-freigegebenes Tool',
+                    description: 'Dieses KI-System ist gemäß P3 AI Policy freigegeben und kann nach Beachtung der Sicherheits- und Compliance-Richtlinien eingesetzt werden.'
+                });
+            }
+            
+            // Base measures by risk level
+            if (riskLevel === 'critical') {
+                measures.push({
+                    title: 'Hochrisiko-System gemäß EU AI Act',
+                    description: 'Umfassende Konformitätsbewertung erforderlich. Dokumentation aller technischen Spezifikationen, Risikomanagement und Qualitätssicherung.'
+                });
+                measures.push({
+                    title: 'Executive Approval',
+                    description: 'Projekt erfordert Freigabe durch P3 Management und ggf. Client C-Level vor Deployment.'
+                });
+            }
+            
+            if (riskLevel === 'high' || riskLevel === 'critical') {
+                measures.push({
+                    title: 'Human Oversight',
+                    description: 'Implementierung eines robusten Human-in-the-Loop Systems. Kritische KI-Entscheidungen müssen von qualifizierten Consultants validiert werden.'
+                });
+                measures.push({
+                    title: 'Bias & Fairness Testing',
+                    description: 'Systematische Überprüfung auf Verzerrungen und Diskriminierung. Besonders wichtig bei Entscheidungen mit personellem Impact.'
+                });
+            }
+            
+            // Data Type specific measures (check for any sensitive data in the array)
+            if (dataTypes.includes('personal_data') || dataTypes.includes('special_categories')) {
+                measures.push({
+                    title: 'DSGVO Compliance',
+                    description: 'Data Protection Impact Assessment (DPIA) durchführen. Rechtsgrundlage prüfen, Betroffenenrechte sicherstellen.'
+                });
+                measures.push({
+                    title: 'Data Minimization',
+                    description: 'Nur absolut notwendige Daten verarbeiten. Anonymisierung/Pseudonymisierung wo möglich implementieren.'
+                });
+            }
+            
+            if (dataTypes.includes('client_confidential') || dataTypes.includes('strategic_sensitive')) {
+                measures.push({
+                    title: 'Vertraulichkeit & IP-Schutz',
+                    description: 'NDA-Compliance sicherstellen. Bei externen KI-Services: On-Premise oder Private-Cloud Lösung bevorzugen. Data Residency Requirements prüfen.'
+                });
+            }
+            
+            if (transparency === 'low') {
+                measures.push({
+                    title: 'Explainability Enhancement',
+                    description: 'Explainable AI Techniken implementieren (LIME, SHAP). Dokumentation der Modell-Logik für Client Transparency.'
+                });
+            }
+            
+            if (autonomy === 'automated' || autonomy === 'critical_automated') {
+                measures.push({
+                    title: 'Monitoring & Audit Trail',
+                    description: 'Continuous Monitoring der KI-Entscheidungen. Vollständige Logging-Infrastruktur für Audits und Fehleranalyse.'
+                });
+            }
+            
+            // AI Use Case specific measures (check if array includes specific use cases)
+            if (aiUseCases.includes('risk_assessment')) {
+                measures.push({
+                    title: 'Validierung & Backtesting',
+                    description: 'Regelmäßige Validierung der Risk-Assessment-Modelle gegen Real-World Outcomes. Confidence Intervals transparent kommunizieren.'
+                });
+            }
+            
+            if (aiUseCases.includes('code_generation')) {
+                measures.push({
+                    title: 'Security Review',
+                    description: 'Code-Reviews für KI-generierten Code verpflichtend. Security Scanning und Vulnerability Assessment integrieren.'
+                });
+            }
+            
+            // General best practices
+            measures.push({
+                title: 'Dokumentation & Governance',
+                description: 'AI Model Card erstellen: Zweck, Limitationen, Training Data, Performance Metrics. Version Control für Model Updates.'
+            });
+            
+            measures.push({
+                title: 'Stakeholder Communication',
+                description: 'Transparente Kommunikation über KI-Einsatz gegenüber Kunden und betroffenen Personen. Klare Verantwortlichkeiten definieren.'
+            });
+            
+            return measures;
+        }
+
+        function updateResults(assessment) {
+            const labels = {
+                projectType: {
+                    'strategy': 'Strategieberatung & Business Development',
+                    'digital_transformation': 'Digitale Transformation',
+                    'process_optimization': 'Prozessoptimierung & Change Management',
+                    'software_development': 'Softwareentwicklung & Implementation',
+                    'data_analytics': 'Data Analytics & AI Solutions',
+                    'automotive': 'Automotive Engineering & Mobility',
+                    'internal_operations': 'Interne P3-Operationen'
+                },
+                aiTool: {
+                    'm365_copilot': '✅ M365 Copilot (freigegeben)',
+                    'ai_builder': '✅ AI Builder in Power Platform (freigegeben)',
+                    'other': '⚠️ Anderes KI-System (Genehmigung erforderlich)'
+                },
+                riskLevel: {
+                    'minimal': 'Minimales Risiko',
+                    'low': 'Geringes Risiko',
+                    'medium': 'Mittleres Risiko',
+                    'high': 'Hohes Risiko',
+                    'critical': 'Kritisches Risiko'
+                }
+            };
+            
+            const riskClass = `risk-${assessment.riskLevel}`;
+            const riskLabel = labels.riskLevel[assessment.riskLevel];
+            
+            document.getElementById('resultsContent').innerHTML = `
+                <div class="result-card">
+                    <div class="result-header">
+                        <div class="result-title">Risiko-Bewertung</div>
+                        <span class="risk-badge ${riskClass}">${riskLabel}</span>
+                    </div>
+                    <p><strong>Risk Score:</strong> ${assessment.riskScore}/15 (Max Score für Basis-Risiken)</p>
+                    <p><strong>Projekttyp:</strong> ${labels.projectType[assessment.projectType]}</p>
+                    <p><strong>Empfohlene Maßnahmen:</strong> ${assessment.measures.length}</p>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-title">Assessment Details</div>
+                    <p><strong>KI-Tool:</strong> ${labels.aiTool[assessment.aiTool]}</p>
+                    <p><strong>KI-Anwendungsfall:</strong> ${getSelectedLabels('aiUseCase').join(', ')}</p>
+                    <p><strong>Datentyp:</strong> ${getSelectedLabels('dataType').join(', ')}</p>
+                    <p><strong>Autonomiegrad:</strong> ${getSelectedLabels('autonomy')}</p>
+                    <p><strong>Impact:</strong> ${getSelectedLabels('impact')}</p>
+                    <p><strong>Transparenz:</strong> ${getSelectedLabels('transparency')}</p>
+                </div>
+            `;
+            
+            let measuresHTML = '<h3 class="section-title">Empfohlene Maßnahmen</h3>';
+            assessment.measures.forEach((measure, index) => {
+                measuresHTML += `
+                    <div class="measure-item">
+                        <div class="measure-title">${index + 1}. ${measure.title}</div>
+                        <div>${measure.description}</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('measuresContent').innerHTML = measuresHTML;
+        }
+
+        function downloadPDF() {
+            if (!currentAssessment) {
+                alert('Bitte führen Sie zunächst das Assessment durch.');
+                return;
+            }
+            
+            // Updated to use getSelectedLabels for multi-select fields
+            const aiUseCasesLabel = getSelectedLabels('aiUseCase').join(' | ');
+            const dataTypesLabel = getSelectedLabels('dataType').join(' | ');
+            
+            const rows = [
+                'Kategorie;Wert',
+                `Risikostufe;${currentAssessment.riskLevel}`,
+                `Risk Score;${currentAssessment.riskScore}/15`, // Corrected max score in export label
+                `Projekttyp;${getSelectedLabels('projectType')}`,
+                `KI-Tool;${getSelectedLabels('aiTool')}`,
+                `KI-Anwendungsfall;"${aiUseCasesLabel.replace(/"/g, '""')}"`, // Quoted for multi-select
+                `Datentyp;"${dataTypesLabel.replace(/"/g, '""')}"`, // Quoted for multi-select
+                `Autonomiegrad;${getSelectedLabels('autonomy')}`,
+                `Impact;${getSelectedLabels('impact')}`,
+                `Transparenz;${getSelectedLabels('transparency')}`,
+                '',
+                'Empfohlene Maßnahmen'
+            ];
+            
+            currentAssessment.measures.forEach((measure, index) => {
+                rows.push(`${index + 1}. ${measure.title};"${measure.description.replace(/"/g, '""')}"`);
+            });
+            
+            const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+            const blob = new Blob([bom, rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `P3_AI_Risk_Assessment_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        function resetForm() {
+            // Reset all select elements
+            document.querySelectorAll('select').forEach(select => {
+                if (select.multiple) {
+                    Array.from(select.options).forEach(option => option.selected = false);
+                } else {
+                    select.value = '';
+                }
+            });
+            
+            currentAssessment = null;
+            
+            document.getElementById('resultsContent').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📊</div>
+                    <p>Bitte führen Sie zunächst das Assessment durch.</p>
+                </div>
+            `;
+            
+            document.getElementById('measuresContent').innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">✅</div>
+                    <p>Bitte führen Sie zunächst das Assessment durch.</p>
+                </div>
+            `;
+            
+            showTab('assessment');
+        }
+    </script>
+</body>
+</html>
