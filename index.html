@@ -455,6 +455,32 @@
         
         // Maximum risk score components: autonomy(5) + data(5) + impact(5) + transparency(2) + unapproved_tool(3) = 20
         const MAX_RISK_SCORE = 20;
+        
+        // Risk scoring weights
+        const AUTONOMY_SCORES = {
+            'support_only': 1,
+            'interactive': 2,
+            'semi_automated': 3,
+            'automated': 4,
+            'critical_automated': 5
+        };
+        
+        const IMPACT_SCORES = {
+            'internal_efficiency': 1,
+            'project_support': 2,
+            'client_deliverable': 3,
+            'strategic_decision': 4,
+            'critical_operations': 5
+        };
+        
+        const DATA_SCORES = {
+            'public_only': 0,
+            'company_general': 1,
+            'client_confidential': 2,
+            'strategic_sensitive': 3,
+            'personal_data': 4,
+            'special_categories': 5
+        };
 
         const translations = {
             en: {
@@ -759,17 +785,8 @@
         }
 
         function getCombinedDataScore(dataTypes) {
-            const dataScores = {
-                'public_only': 0,
-                'company_general': 1,
-                'client_confidential': 2,
-                'strategic_sensitive': 3,
-                'personal_data': 4,
-                'special_categories': 5
-            };
-            
             if (!Array.isArray(dataTypes) || dataTypes.length === 0) return 0;
-            return Math.max(...dataTypes.map(type => dataScores[type] || 0));
+            return Math.max(...dataTypes.map(type => DATA_SCORES[type] || 0));
         }
         
         function getSelectedLabels(selectId) {
@@ -821,26 +838,12 @@
                 });
             }
             
-            const autonomyScores = {
-                'support_only': 1,
-                'interactive': 2,
-                'semi_automated': 3,
-                'automated': 4,
-                'critical_automated': 5
-            };
-            riskScore += autonomyScores[autonomy] || 0;
+            riskScore += AUTONOMY_SCORES[autonomy] || 0;
             
             const maxDataScore = getCombinedDataScore(dataTypes);
             riskScore += maxDataScore;
             
-            const impactScores = {
-                'internal_efficiency': 1,
-                'project_support': 2,
-                'client_deliverable': 3,
-                'strategic_decision': 4,
-                'critical_operations': 5
-            };
-            riskScore += impactScores[impact] || 0;
+            riskScore += IMPACT_SCORES[impact] || 0;
             
             if (transparency === 'low') riskScore += 2;
             else if (transparency === 'medium') riskScore += 1;
@@ -1010,26 +1013,9 @@
                     : 'The AI system has critical risk. Full compliance assessment, management approval, and strict controls are mandatory.'
             };
             
-            // Calculate risk score breakdown
-            const autonomyScores = {
-                'support_only': 1,
-                'interactive': 2,
-                'semi_automated': 3,
-                'automated': 4,
-                'critical_automated': 5
-            };
-            
-            const impactScores = {
-                'internal_efficiency': 1,
-                'project_support': 2,
-                'client_deliverable': 3,
-                'strategic_decision': 4,
-                'critical_operations': 5
-            };
-            
-            const autonomyScore = autonomyScores[assessment.autonomy] || 0;
+            const autonomyScore = AUTONOMY_SCORES[assessment.autonomy] || 0;
             const dataScore = getCombinedDataScore(assessment.dataTypes);
-            const impactScore = impactScores[assessment.impact] || 0;
+            const impactScore = IMPACT_SCORES[assessment.impact] || 0;
             const transparencyScore = assessment.transparency === 'low' ? 2 : (assessment.transparency === 'medium' ? 1 : 0);
             const toolApprovalScore = APPROVED_AI_TOOLS.includes(assessment.aiTool) ? 0 : 3;
             
