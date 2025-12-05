@@ -446,6 +446,9 @@
     <script>
         let currentAssessment = null;
         let currentLanguage = 'en'; // Default language
+        
+        // Define approved AI tools list
+        const APPROVED_AI_TOOLS = ['m365_copilot', 'ai_builder'];
 
         const translations = {
             en: {
@@ -685,7 +688,47 @@
                 `;
             }
             
+            // Update AI Tool dropdown optgroup labels
+            updateAIToolDropdown();
+            
             document.documentElement.lang = currentLanguage;
+        }
+        
+        function updateAIToolDropdown() {
+            const select = document.getElementById('aiTool');
+            const selectedValue = select.value;
+            const lang = translations[currentLanguage];
+            
+            const approvedLabel = currentLanguage === 'de' ? '✅ Freigegebene Tools' : '✅ Approved Tools';
+            const requiresApprovalLabel = currentLanguage === 'de' ? '⚠️ Benötigt IT-Genehmigung' : '⚠️ Requires IT Approval';
+            
+            select.innerHTML = `
+                <option value="" data-i18n="option.pleaseSelect">${lang['option.pleaseSelect']}</option>
+                <optgroup label="${approvedLabel}">
+                    <option value="m365_copilot" data-i18n="option.m365Copilot">${lang['option.m365Copilot']}</option>
+                    <option value="ai_builder" data-i18n="option.aiBuilder">${lang['option.aiBuilder']}</option>
+                </optgroup>
+                <optgroup label="${requiresApprovalLabel}">
+                    <option value="chatgpt" data-i18n="option.chatgpt">${lang['option.chatgpt']}</option>
+                    <option value="gpt4" data-i18n="option.gpt4">${lang['option.gpt4']}</option>
+                    <option value="claude" data-i18n="option.claude">${lang['option.claude']}</option>
+                    <option value="gemini" data-i18n="option.gemini">${lang['option.gemini']}</option>
+                    <option value="github_copilot" data-i18n="option.githubCopilot">${lang['option.githubCopilot']}</option>
+                    <option value="azure_openai" data-i18n="option.azureOpenai">${lang['option.azureOpenai']}</option>
+                    <option value="aws_bedrock" data-i18n="option.awsBedrock">${lang['option.awsBedrock']}</option>
+                    <option value="huggingface" data-i18n="option.huggingface">${lang['option.huggingface']}</option>
+                    <option value="midjourney" data-i18n="option.midjourney">${lang['option.midjourney']}</option>
+                    <option value="jasper" data-i18n="option.jasper">${lang['option.jasper']}</option>
+                    <option value="notion_ai" data-i18n="option.notionAi">${lang['option.notionAi']}</option>
+                    <option value="perplexity" data-i18n="option.perplexity">${lang['option.perplexity']}</option>
+                    <option value="other" data-i18n="option.otherAI">${lang['option.otherAI']}</option>
+                </optgroup>
+            `;
+            
+            // Restore the selected value if it existed
+            if (selectedValue) {
+                select.value = selectedValue;
+            }
         }
 
         function showTab(tabName) {
@@ -754,11 +797,8 @@
             let riskScore = 0;
             let measures = [];
             
-            // List of approved tools
-            const approvedTools = ['m365_copilot', 'ai_builder'];
-            
             // Check if tool requires approval
-            if (!approvedTools.includes(aiTool)) {
+            if (!APPROVED_AI_TOOLS.includes(aiTool)) {
                 riskScore += 3;
                 measures.push({
                     title: currentLanguage === 'de' ? '🚨 IT-GENEHMIGUNG ERFORDERLICH' : '🚨 IT APPROVAL REQUIRED',
@@ -793,7 +833,7 @@
             else if (transparency === 'medium') riskScore += 1;
             
             let riskLevel = 'minimal';
-            if (!approvedTools.includes(aiTool) || riskScore >= 13) riskLevel = 'critical';
+            if (!APPROVED_AI_TOOLS.includes(aiTool) || riskScore >= 13) riskLevel = 'critical';
             else if (riskScore >= 10) riskLevel = 'high';
             else if (riskScore >= 7) riskLevel = 'medium';
             else if (riskScore >= 4) riskLevel = 'low';
@@ -816,9 +856,8 @@
 
         function generateMeasures(riskLevel, aiTool, autonomy, dataTypes, impact, transparency, aiUseCases, measures) {
             const isGerman = currentLanguage === 'de';
-            const approvedTools = ['m365_copilot', 'ai_builder'];
             
-            if (approvedTools.includes(aiTool)) {
+            if (APPROVED_AI_TOOLS.includes(aiTool)) {
                 measures.push({
                     title: isGerman ? '✅ P3-freigegebenes Tool' : '✅ P3-approved Tool',
                     description: isGerman 
