@@ -310,9 +310,25 @@
                             <label class="form-label" data-i18n="label.aiTool">AI Tool / System:</label>
                             <select id="aiTool" onchange="calculateRisk()">
                                 <option value="" data-i18n="option.pleaseSelect">Please select...</option>
-                                <option value="m365_copilot" data-i18n="option.m365Copilot">✅ M365 Copilot (approved)</option>
-                                <option value="ai_builder" data-i18n="option.aiBuilder">✅ AI Builder in Power Platform (approved)</option>
-                                <option value="other" data-i18n="option.otherAI">⚠️ Other AI System (approval required)</option>
+                                <optgroup label="✅ Approved Tools">
+                                    <option value="m365_copilot" data-i18n="option.m365Copilot">M365 Copilot</option>
+                                    <option value="ai_builder" data-i18n="option.aiBuilder">AI Builder in Power Platform</option>
+                                </optgroup>
+                                <optgroup label="⚠️ Requires IT Approval">
+                                    <option value="chatgpt" data-i18n="option.chatgpt">ChatGPT (OpenAI)</option>
+                                    <option value="gpt4" data-i18n="option.gpt4">GPT-4 / GPT-4o (OpenAI)</option>
+                                    <option value="claude" data-i18n="option.claude">Claude (Anthropic)</option>
+                                    <option value="gemini" data-i18n="option.gemini">Google Gemini / Bard</option>
+                                    <option value="github_copilot" data-i18n="option.githubCopilot">GitHub Copilot</option>
+                                    <option value="azure_openai" data-i18n="option.azureOpenai">Azure OpenAI Service</option>
+                                    <option value="aws_bedrock" data-i18n="option.awsBedrock">AWS Bedrock</option>
+                                    <option value="huggingface" data-i18n="option.huggingface">HuggingFace Models</option>
+                                    <option value="midjourney" data-i18n="option.midjourney">Midjourney / DALL-E (Image Gen)</option>
+                                    <option value="jasper" data-i18n="option.jasper">Jasper AI</option>
+                                    <option value="notion_ai" data-i18n="option.notionAi">Notion AI</option>
+                                    <option value="perplexity" data-i18n="option.perplexity">Perplexity AI</option>
+                                    <option value="other" data-i18n="option.otherAI">Other AI System</option>
+                                </optgroup>
                             </select>
                         </div>
 
@@ -390,7 +406,7 @@
                         <li><strong>AI Builder in Power Platform</strong> - for automation and intelligent workflows</li>
                         <li><strong>M365 Copilot</strong> - for productivity enhancement in Microsoft 365</li>
                     </ul>
-                    Other AI systems require approval from P3 Management.
+                    All other AI systems (including ChatGPT, Claude, GitHub Copilot, etc.) <strong>require IT approval</strong> before use. Please contact the IT department for assessment.
                 </div>
                 
                 <div class="info-box" style="margin-top: 15px;" id="infoBox2">
@@ -455,9 +471,21 @@
                 'option.dataAnalytics': 'Data Analytics & AI Solutions',
                 'option.automotive': 'Automotive Engineering & Mobility',
                 'option.internalOperations': 'Internal P3 Operations',
-                'option.m365Copilot': '✅ M365 Copilot (approved)',
-                'option.aiBuilder': '✅ AI Builder in Power Platform (approved)',
-                'option.otherAI': '⚠️ Other AI System (approval required)',
+                'option.m365Copilot': 'M365 Copilot',
+                'option.aiBuilder': 'AI Builder in Power Platform',
+                'option.chatgpt': 'ChatGPT (OpenAI)',
+                'option.gpt4': 'GPT-4 / GPT-4o (OpenAI)',
+                'option.claude': 'Claude (Anthropic)',
+                'option.gemini': 'Google Gemini / Bard',
+                'option.githubCopilot': 'GitHub Copilot',
+                'option.azureOpenai': 'Azure OpenAI Service',
+                'option.awsBedrock': 'AWS Bedrock',
+                'option.huggingface': 'HuggingFace Models',
+                'option.midjourney': 'Midjourney / DALL-E (Image Gen)',
+                'option.jasper': 'Jasper AI',
+                'option.notionAi': 'Notion AI',
+                'option.perplexity': 'Perplexity AI',
+                'option.otherAI': 'Other AI System',
                 'option.clientAdvisory': 'Client Advisory & Insight Generation',
                 'option.predictiveAnalytics': 'Predictive Analytics & Forecasting',
                 'option.automation': 'Process Automation',
@@ -533,9 +561,21 @@
                 'option.dataAnalytics': 'Data Analytics & AI Solutions',
                 'option.automotive': 'Automotive Engineering & Mobility',
                 'option.internalOperations': 'Interne P3-Operationen',
-                'option.m365Copilot': '✅ M365 Copilot (freigegeben)',
-                'option.aiBuilder': '✅ AI Builder in Power Platform (freigegeben)',
-                'option.otherAI': '⚠️ Anderes KI-System (Genehmigung erforderlich)',
+                'option.m365Copilot': 'M365 Copilot',
+                'option.aiBuilder': 'AI Builder in Power Platform',
+                'option.chatgpt': 'ChatGPT (OpenAI)',
+                'option.gpt4': 'GPT-4 / GPT-4o (OpenAI)',
+                'option.claude': 'Claude (Anthropic)',
+                'option.gemini': 'Google Gemini / Bard',
+                'option.githubCopilot': 'GitHub Copilot',
+                'option.azureOpenai': 'Azure OpenAI Service',
+                'option.awsBedrock': 'AWS Bedrock',
+                'option.huggingface': 'HuggingFace Models',
+                'option.midjourney': 'Midjourney / DALL-E (Bildgenerierung)',
+                'option.jasper': 'Jasper AI',
+                'option.notionAi': 'Notion AI',
+                'option.perplexity': 'Perplexity AI',
+                'option.otherAI': 'Anderes KI-System',
                 'option.clientAdvisory': 'Client Advisory & Insight Generation',
                 'option.predictiveAnalytics': 'Predictive Analytics & Forecasting',
                 'option.automation': 'Prozessautomatisierung',
@@ -632,7 +672,7 @@
                         <li><strong>AI Builder in Power Platform</strong> - für Automatisierung und intelligente Workflows</li>
                         <li><strong>M365 Copilot</strong> - für Produktivitätssteigerung in Microsoft 365</li>
                     </ul>
-                    Andere KI-Systeme erfordern eine Genehmigung durch das P3 Management.
+                    Alle anderen KI-Systeme (einschließlich ChatGPT, Claude, GitHub Copilot, etc.) <strong>benötigen eine IT-Genehmigung</strong> vor der Nutzung. Bitte kontaktieren Sie die IT-Abteilung für eine Bewertung.
                 `;
             } else {
                 document.getElementById('infoBox1').innerHTML = `
@@ -641,7 +681,7 @@
                         <li><strong>AI Builder in Power Platform</strong> - for automation and intelligent workflows</li>
                         <li><strong>M365 Copilot</strong> - for productivity enhancement in Microsoft 365</li>
                     </ul>
-                    Other AI systems require approval from P3 Management.
+                    All other AI systems (including ChatGPT, Claude, GitHub Copilot, etc.) <strong>require IT approval</strong> before use. Please contact the IT department for assessment.
                 `;
             }
             
@@ -714,13 +754,17 @@
             let riskScore = 0;
             let measures = [];
             
-            if (aiTool === 'other') {
+            // List of approved tools
+            const approvedTools = ['m365_copilot', 'ai_builder'];
+            
+            // Check if tool requires approval
+            if (!approvedTools.includes(aiTool)) {
                 riskScore += 3;
                 measures.push({
-                    title: currentLanguage === 'de' ? '🚨 GENEHMIGUNG ERFORDERLICH' : '🚨 APPROVAL REQUIRED',
+                    title: currentLanguage === 'de' ? '🚨 IT-GENEHMIGUNG ERFORDERLICH' : '🚨 IT APPROVAL REQUIRED',
                     description: currentLanguage === 'de' 
-                        ? 'Dieses KI-System ist nicht freigegeben! Gemäß P3 AI Policy ist vor dem Einsatz eine formelle Genehmigung durch das Management einzuholen.'
-                        : 'This AI system is not approved! According to P3 AI Policy, formal approval from management must be obtained before deployment.'
+                        ? 'Dieses KI-System ist nicht freigegeben! Gemäß P3 AI Policy muss dieses Tool vor dem Einsatz durch die IT-Abteilung geprüft und genehmigt werden. Bitte kontaktieren Sie das IT-Team für eine Bewertung.'
+                        : 'This AI system is not approved! According to P3 AI Policy, this tool must be reviewed and approved by the IT department before deployment. Please contact the IT team for an assessment.'
                 });
             }
             
@@ -749,7 +793,7 @@
             else if (transparency === 'medium') riskScore += 1;
             
             let riskLevel = 'minimal';
-            if (aiTool === 'other' || riskScore >= 13) riskLevel = 'critical';
+            if (!approvedTools.includes(aiTool) || riskScore >= 13) riskLevel = 'critical';
             else if (riskScore >= 10) riskLevel = 'high';
             else if (riskScore >= 7) riskLevel = 'medium';
             else if (riskScore >= 4) riskLevel = 'low';
@@ -772,8 +816,9 @@
 
         function generateMeasures(riskLevel, aiTool, autonomy, dataTypes, impact, transparency, aiUseCases, measures) {
             const isGerman = currentLanguage === 'de';
+            const approvedTools = ['m365_copilot', 'ai_builder'];
             
-            if (aiTool === 'm365_copilot' || aiTool === 'ai_builder') {
+            if (approvedTools.includes(aiTool)) {
                 measures.push({
                     title: isGerman ? '✅ P3-freigegebenes Tool' : '✅ P3-approved Tool',
                     description: isGerman 
