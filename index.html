@@ -449,6 +449,38 @@
         
         // Define approved AI tools list
         const APPROVED_AI_TOOLS = ['m365_copilot', 'ai_builder'];
+        
+        // Navigation delay for smooth transition when auto-navigating to results
+        const AUTO_NAVIGATION_DELAY_MS = 300;
+        
+        // Maximum risk score components: autonomy(5) + data(5) + impact(5) + transparency(2) + unapproved_tool(3) = 20
+        const MAX_RISK_SCORE = 20;
+        
+        // Risk scoring weights
+        const AUTONOMY_SCORES = {
+            'support_only': 1,
+            'interactive': 2,
+            'semi_automated': 3,
+            'automated': 4,
+            'critical_automated': 5
+        };
+        
+        const IMPACT_SCORES = {
+            'internal_efficiency': 1,
+            'project_support': 2,
+            'client_deliverable': 3,
+            'strategic_decision': 4,
+            'critical_operations': 5
+        };
+        
+        const DATA_SCORES = {
+            'public_only': 0,
+            'company_general': 1,
+            'client_confidential': 2,
+            'strategic_sensitive': 3,
+            'personal_data': 4,
+            'special_categories': 5
+        };
 
         const translations = {
             en: {
@@ -735,11 +767,11 @@
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
-            if (event && event.target) {
-                event.target.classList.add('active');
-            } else {
-                const activeTabElement = document.querySelector(`.tab[onclick="showTab('${tabName}')"]`);
-                if (activeTabElement) activeTabElement.classList.add('active');
+            
+            // Activate the corresponding tab button
+            const tabButton = document.querySelector(`.tab[data-tab="${tabName}"]`);
+            if (tabButton) {
+                tabButton.classList.add('active');
             }
         }
         
@@ -753,17 +785,8 @@
         }
 
         function getCombinedDataScore(dataTypes) {
-            const dataScores = {
-                'public_only': 0,
-                'company_general': 1,
-                'client_confidential': 2,
-                'strategic_sensitive': 3,
-                'personal_data': 4,
-                'special_categories': 5
-            };
-            
             if (!Array.isArray(dataTypes) || dataTypes.length === 0) return 0;
-            return Math.max(...dataTypes.map(type => dataScores[type] || 0));
+            return Math.max(...dataTypes.map(type => DATA_SCORES[type] || 0));
         }
         
         function getSelectedLabels(selectId) {
@@ -791,6 +814,13 @@
             
             currentAssessment = performAssessment(projectType, aiTool, aiUseCases, dataTypes, autonomy, impact, transparency);
             updateResults(currentAssessment);
+            
+            // Automatically navigate to results tab when form is complete
+            setTimeout(() => {
+                showTab('results');
+                // Scroll to top of page for better user experience
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, AUTO_NAVIGATION_DELAY_MS);
         }
 
         function performAssessment(projectType, aiTool, aiUseCases, dataTypes, autonomy, impact, transparency) {
@@ -808,26 +838,12 @@
                 });
             }
             
-            const autonomyScores = {
-                'support_only': 1,
-                'interactive': 2,
-                'semi_automated': 3,
-                'automated': 4,
-                'critical_automated': 5
-            };
-            riskScore += autonomyScores[autonomy] || 0;
+            riskScore += AUTONOMY_SCORES[autonomy] || 0;
             
             const maxDataScore = getCombinedDataScore(dataTypes);
             riskScore += maxDataScore;
             
-            const impactScores = {
-                'internal_efficiency': 1,
-                'project_support': 2,
-                'client_deliverable': 3,
-                'strategic_decision': 4,
-                'critical_operations': 5
-            };
-            riskScore += impactScores[impact] || 0;
+            riskScore += IMPACT_SCORES[impact] || 0;
             
             if (transparency === 'low') riskScore += 2;
             else if (transparency === 'medium') riskScore += 1;
@@ -978,15 +994,123 @@
             const riskClass = `risk-${assessment.riskLevel}`;
             const riskLabel = lang[`risk.${assessment.riskLevel}`];
             
+            // Generate risk level explanation
+            const riskExplanations = {
+                'minimal': currentLanguage === 'de' 
+                    ? 'Das KI-System stellt nur ein minimales Risiko dar. Es können Standardsicherheitsmaßnahmen angewendet werden.'
+                    : 'The AI system poses only minimal risk. Standard security measures can be applied.',
+                'low': currentLanguage === 'de'
+                    ? 'Das KI-System hat ein geringes Risiko. Grundlegende Überwachung und Dokumentation sind erforderlich.'
+                    : 'The AI system has low risk. Basic monitoring and documentation are required.',
+                'medium': currentLanguage === 'de'
+                    ? 'Das KI-System hat ein mittleres Risiko. Erweiterte Kontrollen und regelmäßige Überprüfungen sind notwendig.'
+                    : 'The AI system has medium risk. Enhanced controls and regular reviews are necessary.',
+                'high': currentLanguage === 'de'
+                    ? 'Das KI-System hat ein hohes Risiko. Umfassende Risikomanagement-Maßnahmen und kontinuierliche Überwachung sind erforderlich.'
+                    : 'The AI system has high risk. Comprehensive risk management measures and continuous monitoring are required.',
+                'critical': currentLanguage === 'de'
+                    ? 'Das KI-System hat ein kritisches Risiko. Vollständige Compliance-Bewertung, Management-Genehmigung und strenge Kontrollen sind zwingend erforderlich.'
+                    : 'The AI system has critical risk. Full compliance assessment, management approval, and strict controls are mandatory.'
+            };
+            
+            const autonomyScore = AUTONOMY_SCORES[assessment.autonomy] || 0;
+            const dataScore = getCombinedDataScore(assessment.dataTypes);
+            const impactScore = IMPACT_SCORES[assessment.impact] || 0;
+            const transparencyScore = assessment.transparency === 'low' ? 2 : (assessment.transparency === 'medium' ? 1 : 0);
+            const toolApprovalScore = APPROVED_AI_TOOLS.includes(assessment.aiTool) ? 0 : 3;
+            
+            // Generate compliance requirements
+            let complianceReqs = [];
+            if (assessment.dataTypes.includes('personal_data') || assessment.dataTypes.includes('special_categories')) {
+                complianceReqs.push(currentLanguage === 'de' ? 'DSGVO/GDPR Compliance' : 'GDPR Compliance');
+            }
+            if (assessment.riskLevel === 'critical' || assessment.riskLevel === 'high') {
+                complianceReqs.push(currentLanguage === 'de' ? 'EU AI Act - Hochrisiko-System' : 'EU AI Act - High-Risk System');
+            }
+            if (!APPROVED_AI_TOOLS.includes(assessment.aiTool)) {
+                complianceReqs.push(currentLanguage === 'de' ? 'P3 IT-Genehmigung erforderlich' : 'P3 IT Approval Required');
+            }
+            if (assessment.dataTypes.includes('client_confidential') || assessment.dataTypes.includes('strategic_sensitive')) {
+                complianceReqs.push('NDA Compliance');
+            }
+            
             document.getElementById('resultsContent').innerHTML = `
                 <div class="result-card">
                     <div class="result-header">
                         <div class="result-title">${lang['result.riskAssessment']}</div>
                         <span class="risk-badge ${riskClass}">${riskLabel}</span>
                     </div>
-                    <p><strong>${lang['result.riskScore']}:</strong> ${assessment.riskScore}/15</p>
+                    <p style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px; line-height: 1.6;">
+                        ${riskExplanations[assessment.riskLevel]}
+                    </p>
+                    <p style="margin-top: 15px;"><strong>${lang['result.riskScore']}:</strong> ${assessment.riskScore}/${MAX_RISK_SCORE}</p>
                     <p><strong>${lang['result.projectType']}:</strong> ${getSelectedLabels('projectType')}</p>
                     <p><strong>${lang['result.recommendedMeasures']}:</strong> ${assessment.measures.length}</p>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-title">${currentLanguage === 'de' ? 'Risikoanalyse nach Kategorien' : 'Risk Breakdown by Category'}</div>
+                    <div style="margin-top: 15px;">
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; margin-bottom: 8px; border-radius: 4px;">
+                            <span><strong>${currentLanguage === 'de' ? 'Autonomiegrad' : 'Autonomy Level'}:</strong></span>
+                            <span>${autonomyScore}/5 ${currentLanguage === 'de' ? 'Punkte' : 'points'}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; margin-bottom: 8px; border-radius: 4px;">
+                            <span><strong>${currentLanguage === 'de' ? 'Datensensibilität' : 'Data Sensitivity'}:</strong></span>
+                            <span>${dataScore}/5 ${currentLanguage === 'de' ? 'Punkte' : 'points'}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; margin-bottom: 8px; border-radius: 4px;">
+                            <span><strong>${currentLanguage === 'de' ? 'Auswirkungsbereich' : 'Impact Scope'}:</strong></span>
+                            <span>${impactScore}/5 ${currentLanguage === 'de' ? 'Punkte' : 'points'}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; margin-bottom: 8px; border-radius: 4px;">
+                            <span><strong>${currentLanguage === 'de' ? 'Transparenzmangel' : 'Transparency Gap'}:</strong></span>
+                            <span>${transparencyScore}/2 ${currentLanguage === 'de' ? 'Punkte' : 'points'}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; margin-bottom: 8px; border-radius: 4px;">
+                            <span><strong>${currentLanguage === 'de' ? 'Tool-Genehmigungsstatus' : 'Tool Approval Status'}:</strong></span>
+                            <span>${toolApprovalScore}/3 ${currentLanguage === 'de' ? 'Punkte' : 'points'}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-title">${currentLanguage === 'de' ? 'Datensensibilitäts-Analyse' : 'Data Sensitivity Analysis'}</div>
+                    <p style="margin-top: 10px;"><strong>${currentLanguage === 'de' ? 'Verarbeitete Datentypen' : 'Processed Data Types'}:</strong></p>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        ${getSelectedLabels('dataType').map(label => `<li>${label}</li>`).join('')}
+                    </ul>
+                    ${assessment.dataTypes.includes('personal_data') || assessment.dataTypes.includes('special_categories') ? `
+                        <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border-left: 4px solid #856404; border-radius: 4px;">
+                            <strong>⚠️ ${currentLanguage === 'de' ? 'Personenbezogene Daten' : 'Personal Data'}:</strong>
+                            ${currentLanguage === 'de' 
+                                ? 'DSGVO-Compliance ist erforderlich. Data Protection Impact Assessment (DPIA) muss durchgeführt werden.'
+                                : 'GDPR compliance is required. Data Protection Impact Assessment (DPIA) must be conducted.'}
+                        </div>
+                    ` : ''}
+                    ${assessment.dataTypes.includes('client_confidential') || assessment.dataTypes.includes('strategic_sensitive') ? `
+                        <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border-left: 4px solid #856404; border-radius: 4px;">
+                            <strong>⚠️ ${currentLanguage === 'de' ? 'Vertrauliche Daten' : 'Confidential Data'}:</strong>
+                            ${currentLanguage === 'de'
+                                ? 'Besondere Vertraulichkeitsmaßnahmen und NDA-Compliance erforderlich.'
+                                : 'Special confidentiality measures and NDA compliance required.'}
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-title">${currentLanguage === 'de' ? 'Compliance-Anforderungen' : 'Compliance Requirements'}</div>
+                    ${complianceReqs.length > 0 ? `
+                        <ul style="margin: 15px 0; padding-left: 20px;">
+                            ${complianceReqs.map(req => `<li style="margin-bottom: 8px;">${req}</li>`).join('')}
+                        </ul>
+                    ` : `
+                        <p style="margin-top: 10px; color: #28a745;">
+                            ✅ ${currentLanguage === 'de' 
+                                ? 'Standard-Compliance-Anforderungen gelten.'
+                                : 'Standard compliance requirements apply.'}
+                        </p>
+                    `}
                 </div>
                 
                 <div class="result-card">
@@ -1028,7 +1152,7 @@
             const rows = [
                 currentLanguage === 'de' ? 'Kategorie;Wert' : 'Category;Value',
                 `${currentLanguage === 'de' ? 'Risikostufe' : 'Risk Level'};${lang[`risk.${currentAssessment.riskLevel}`]}`,
-                `Risk Score;${currentAssessment.riskScore}/15`,
+                `Risk Score;${currentAssessment.riskScore}/${MAX_RISK_SCORE}`,
                 `${lang['result.projectType']};${getSelectedLabels('projectType')}`,
                 `${lang['result.aiTool']};${getSelectedLabels('aiTool')}`,
                 `${lang['result.aiUseCase']};"${aiUseCasesLabel.replace(/"/g, '""')}"`,
