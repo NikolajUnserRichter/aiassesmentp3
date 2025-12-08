@@ -1,0 +1,65 @@
+/**
+ * Responsive Design - Media Queries
+ * 
+ * Mobile-first responsive adjustments for:
+ * - Tablets (max-width: 768px)
+ * - Mobile phones (max-width: 480px)
+ */
+
+/* ===== TABLET AND BELOW (768px) ===== */
+@media (max-width: 768px) {
+    .logo-container img {
+        height: clamp(80px, 12vw, 100px);
+    }
+
+    .tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .tab {
+        min-width: clamp(100px, 25vw, 120px);
+    }
+
+    .result-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .language-toggle {
+        flex-wrap: wrap;
+    }
+    
+    .sticky-header-content {
+        padding: 10px 20px;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .sticky-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .sticky-nav-item {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+    
+    .header h1 {
+        font-size: clamp(32px, 7vw, 60px);
+    }
+    
+    .header p {
+        font-size: clamp(16px, 2.5vw, 22px);
+    }
+}
+
+/* ===== MOBILE (480px) ===== */
+@media (max-width: 480px) {
+    .form-grid {
+        --grid-min-width: 100%;
+        grid-template-columns: 1fr;
+    }
+}
