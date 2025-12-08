@@ -658,3 +658,50 @@ select option:checked {
 [data-theme="dark"] .empty-state p {
     color: var(--text-primary);
 }
+
+/* ===== RISK ANALYSIS INFO BOXES ===== */
+.risk-explanation-box {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(248, 249, 250, 0.6);
+    border-radius: 6px;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .risk-explanation-box {
+    background: rgba(60, 60, 80, 0.6);
+    color: var(--text-primary);
+}
+
+/* Risk breakdown item boxes */
+.risk-breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: rgba(248, 249, 250, 0.6);
+    margin-bottom: 8px;
+    border-radius: 4px;
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .risk-breakdown-item {
+    background: rgba(60, 60, 80, 0.6);
+    color: var(--text-primary);
+}
+
+/* Warning boxes for data sensitivity */
+.data-warning-box {
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(255, 243, 205, 0.8);
+    border-left: 4px solid #856404;
+    border-radius: 4px;
+    color: #856404;
+}
+
+[data-theme="dark"] .data-warning-box {
+    background: rgba(139, 116, 4, 0.25);
+    border-left-color: #ffc107;
+    color: #ffc107;
+}

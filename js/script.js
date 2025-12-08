@@ -681,7 +681,7 @@ function updateResults(assessment) {
                 <div class="result-title">${lang['result.riskAssessment']}</div>
                 <span class="risk-badge ${riskClass}">${riskLabel}</span>
             </div>
-            <p style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px; line-height: 1.6;">
+            <p class="risk-explanation-box">
                 ${riskExplanations[assessment.riskLevel]}
             </p>
             <p style="margin-top: 15px;"><strong>${lang['result.riskScore']}:</strong> ${assessment.riskScore}/${MAX_RISK_SCORE}</p>
@@ -692,23 +692,23 @@ function updateResults(assessment) {
         <div class="result-card scroll-reveal">
             <div class="result-title">${currentLanguage === 'de' ? 'Risikoanalyse nach Kategorien' : 'Risk Breakdown by Category'}</div>
             <div style="margin-top: 15px;">
-                <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; margin-bottom: 8px; border-radius: 4px;">
+                <div class="risk-breakdown-item">
                     <span><strong>${currentLanguage === 'de' ? 'Autonomiegrad' : 'Autonomy Level'}:</strong></span>
                     <span>${autonomyScore}/5 ${currentLanguage === 'de' ? 'Punkte' : 'points'}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; margin-bottom: 8px; border-radius: 4px;">
+                <div class="risk-breakdown-item">
                     <span><strong>${currentLanguage === 'de' ? 'Datensensibilität' : 'Data Sensitivity'}:</strong></span>
                     <span>${dataScore}/5 ${currentLanguage === 'de' ? 'Punkte' : 'points'}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; margin-bottom: 8px; border-radius: 4px;">
+                <div class="risk-breakdown-item">
                     <span><strong>${currentLanguage === 'de' ? 'Auswirkungsbereich' : 'Impact Scope'}:</strong></span>
                     <span>${impactScore}/5 ${currentLanguage === 'de' ? 'Punkte' : 'points'}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; margin-bottom: 8px; border-radius: 4px;">
+                <div class="risk-breakdown-item">
                     <span><strong>${currentLanguage === 'de' ? 'Transparenzmangel' : 'Transparency Gap'}:</strong></span>
                     <span>${transparencyScore}/2 ${currentLanguage === 'de' ? 'Punkte' : 'points'}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; margin-bottom: 8px; border-radius: 4px;">
+                <div class="risk-breakdown-item">
                     <span><strong>${currentLanguage === 'de' ? 'Tool-Genehmigungsstatus' : 'Tool Approval Status'}:</strong></span>
                     <span>${toolApprovalScore}/3 ${currentLanguage === 'de' ? 'Punkte' : 'points'}</span>
                 </div>
@@ -722,7 +722,7 @@ function updateResults(assessment) {
                 ${getSelectedLabels('dataType').map(label => `<li>${label}</li>`).join('')}
             </ul>
             ${assessment.dataTypes.includes('personal_data') || assessment.dataTypes.includes('special_categories') ? `
-                <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border-left: 4px solid #856404; border-radius: 4px;">
+                <div class="data-warning-box">
                     <strong>⚠️ ${currentLanguage === 'de' ? 'Personenbezogene Daten' : 'Personal Data'}:</strong>
                     ${currentLanguage === 'de' 
                         ? 'DSGVO-Compliance ist erforderlich. Data Protection Impact Assessment (DPIA) muss durchgeführt werden.'
@@ -730,7 +730,7 @@ function updateResults(assessment) {
                 </div>
             ` : ''}
             ${assessment.dataTypes.includes('client_confidential') || assessment.dataTypes.includes('strategic_sensitive') ? `
-                <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border-left: 4px solid #856404; border-radius: 4px;">
+                <div class="data-warning-box">
                     <strong>⚠️ ${currentLanguage === 'de' ? 'Vertrauliche Daten' : 'Confidential Data'}:</strong>
                     ${currentLanguage === 'de'
                         ? 'Besondere Vertraulichkeitsmaßnahmen und NDA-Compliance erforderlich.'
