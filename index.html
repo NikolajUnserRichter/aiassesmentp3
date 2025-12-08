@@ -83,7 +83,7 @@
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
@@ -94,7 +94,7 @@
         @keyframes slideInFromLeft {
             from {
                 opacity: 0;
-                transform: translateX(-30px);
+                transform: translateX(-60px);
             }
             to {
                 opacity: 1;
@@ -105,7 +105,7 @@
         @keyframes slideInFromRight {
             from {
                 opacity: 0;
-                transform: translateX(30px);
+                transform: translateX(60px);
             }
             to {
                 opacity: 1;
@@ -116,7 +116,7 @@
         @keyframes scaleIn {
             from {
                 opacity: 0;
-                transform: scale(0.95);
+                transform: scale(0.9);
             }
             to {
                 opacity: 1;
@@ -141,9 +141,82 @@
                 background-position: 1000px 0;
             }
         }
+        
+        @keyframes parallaxFloat {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        /* Scroll reveal classes */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .scroll-reveal-left {
+            opacity: 0;
+            transform: translateX(-60px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-reveal-left.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .scroll-reveal-right {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-reveal-right.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .scroll-reveal-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-reveal-scale.revealed {
+            opacity: 1;
+            transform: scale(1);
+        }
 
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+        
+        /* Scroll snap for smooth section-by-section scrolling */
+        body.scroll-snap-enabled {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+        
+        .scroll-section {
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            min-height: 100vh;
+            position: relative;
         }
 
         body {
@@ -151,7 +224,7 @@
             background: linear-gradient(135deg, var(--background-gradient-start) 0%, var(--background-gradient-end) 100%);
             background-attachment: fixed;
             margin: 0;
-            padding: clamp(15px, 3vw, 30px);
+            padding: 0;
             min-height: 100vh;
             color: var(--text-primary);
             transition: background 0.3s ease, color 0.3s ease;
@@ -215,40 +288,130 @@
 
         .logo-container {
             text-align: center;
-            padding: var(--space-xl);
+            padding: clamp(100px, 15vh, 150px) var(--space-xl);
             position: relative;
             z-index: 1;
-            animation: fadeIn 0.8s ease-out;
+            animation: fadeIn 1.2s ease-out;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .logo-container img {
-            height: clamp(60px, 10vw, 90px);
+            height: clamp(100px, 15vw, 150px);
             width: auto;
-            filter: drop-shadow(0 6px 24px rgba(124, 179, 66, 0.35));
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                        filter 0.4s ease;
+            filter: drop-shadow(0 8px 32px rgba(124, 179, 66, 0.4));
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        filter 0.5s ease;
+            animation: parallaxFloat 6s ease-in-out infinite;
         }
 
         .logo-container img:hover {
-            transform: scale(1.08) rotate(3deg);
-            filter: drop-shadow(0 10px 40px rgba(124, 179, 66, 0.6));
+            transform: scale(1.1) rotate(5deg);
+            filter: drop-shadow(0 12px 48px rgba(124, 179, 66, 0.6));
         }
 
         .container {
-            max-width: min(1400px, 95vw);
+            max-width: 100%;
+            width: 100%;
+            margin: 0;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: visible;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            animation: none;
+            position: relative;
+            z-index: 1;
+            border: none;
+        }
+        
+        .content-wrapper {
+            max-width: min(1400px, 90vw);
             margin: 0 auto;
+            padding: clamp(30px, 5vw, 50px) clamp(20px, 4vw, 40px);
             background: var(--card-bg);
             border-radius: clamp(20px, 3vw, 32px);
             box-shadow: 0 25px 80px -15px var(--shadow-color),
                         0 0 0 1px var(--glass-border) inset,
                         0 8px 32px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
             backdrop-filter: blur(30px) saturate(180%);
             -webkit-backdrop-filter: blur(30px) saturate(180%);
-            animation: scaleIn 0.6s ease-out;
-            position: relative;
-            z-index: 1;
             border: 1px solid var(--glass-border);
+        }
+        
+        /* Sticky header */
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        
+        [data-theme="dark"] .sticky-header {
+            background: rgba(30, 30, 45, 0.9);
+        }
+        
+        .sticky-header.hidden {
+            transform: translateY(-100%);
+        }
+        
+        .sticky-header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sticky-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .sticky-nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .sticky-nav-item {
+            padding: 8px 16px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+        }
+        
+        .sticky-nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--primary-color);
+        }
+        
+        /* Scroll progress indicator */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            z-index: 1001;
+            transition: width 0.1s ease;
         }
 
         .container::before {
@@ -325,11 +488,16 @@
         .header {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            padding: clamp(40px, 8vw, 70px) clamp(20px, 5vw, 40px);
+            padding: clamp(120px, 20vh, 200px) clamp(20px, 5vw, 40px);
             text-align: center;
             position: relative;
             overflow: hidden;
-            animation: slideInFromLeft 0.8s ease-out;
+            animation: none;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .header::before {
@@ -359,24 +527,25 @@
         }
 
         .header h1 {
-            margin: 0 0 15px 0;
-            font-size: clamp(28px, 5vw, 48px);
+            margin: 0 0 30px 0;
+            font-size: clamp(40px, 8vw, 80px);
             font-weight: 800;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
             position: relative;
             z-index: 1;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            line-height: 1.2;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            line-height: 1.1;
         }
 
         .header p {
             margin: 0;
             opacity: 0.95;
-            font-size: clamp(14px, 2vw, 18px);
+            font-size: clamp(18px, 3vw, 28px);
             font-weight: 500;
             position: relative;
             z-index: 1;
             letter-spacing: 0.01em;
+            max-width: 800px;
         }
 
         .tabs {
@@ -441,8 +610,12 @@
         }
 
         .content {
-            padding: clamp(30px, 5vw, 50px) clamp(20px, 4vw, 40px);
+            padding: clamp(60px, 10vh, 100px) 0;
             animation: fadeIn 0.5s ease-out;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .form-grid {
@@ -845,7 +1018,7 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             .logo-container img {
-                height: clamp(50px, 8vw, 60px);
+                height: clamp(80px, 12vw, 100px);
             }
 
             .tabs {
@@ -864,6 +1037,31 @@
 
             .language-toggle {
                 flex-wrap: wrap;
+            }
+            
+            .sticky-header-content {
+                padding: 10px 20px;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .sticky-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .sticky-nav-item {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+            
+            .header h1 {
+                font-size: clamp(32px, 7vw, 60px);
+            }
+            
+            .header p {
+                font-size: clamp(16px, 2.5vw, 22px);
             }
         }
 
@@ -919,18 +1117,36 @@
     </style>
 </head>
 <body>
-<div class="logo-container">
-    <img src="P3_lemonsplash.png" alt="P3 Logo">
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- Sticky Header -->
+<header class="sticky-header" id="stickyHeader">
+    <div class="sticky-header-content">
+        <a href="#hero" class="sticky-logo" onclick="scrollToTop(); return false;">P3 AI</a>
+        <nav class="sticky-nav">
+            <a href="#assessment" class="sticky-nav-item">Assessment</a>
+            <a href="#results" class="sticky-nav-item">Results</a>
+            <a href="#measures" class="sticky-nav-item">Measures</a>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+            <button class="theme-toggle" onclick="toggleLanguage()" id="languageBtn" aria-label="Switch language">🇩🇪</button>
+        </nav>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<div class="logo-container scroll-section" id="hero">
+    <img src="P3_lemonsplash.png" alt="P3 Logo" class="scroll-reveal-scale">
 </div>
+
     <div class="container">
         <div class="language-toggle">
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle dark mode">🌙 Dark Mode</button>
-            <button onclick="toggleLanguage()" id="languageBtn" aria-label="Switch language">🇩🇪 Deutsch</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn2" aria-label="Toggle dark mode">🌙 Dark Mode</button>
+            <button onclick="toggleLanguage()" id="languageBtn2" aria-label="Switch language">🇩🇪 Deutsch</button>
         </div>
         
-        <div class="header">
-            <h1 id="headerTitle">P3 AI Risk Assessment Tool</h1>
-            <p id="headerSubtitle">Strategic Assessment of AI Systems for Consulting Projects</p>
+        <div class="header scroll-section">
+            <h1 id="headerTitle" class="scroll-reveal">P3 AI Risk Assessment Tool</h1>
+            <p id="headerSubtitle" class="scroll-reveal">Strategic Assessment of AI Systems for Consulting Projects</p>
         </div>
         
         <div class="tabs">
@@ -939,10 +1155,11 @@
             <div class="tab" onclick="showTab('measures')" data-tab="measures">Recommendations</div>
         </div>
 
-        <div id="assessment" class="tab-content active">
+        <div id="assessment" class="tab-content active scroll-section">
             <div class="content">
-                <div class="form-grid">
-                    <div class="form-section">
+                <div class="content-wrapper">
+                <div class="form-grid scroll-reveal">
+                    <div class="form-section scroll-reveal-left">
                         <h3 class="section-title" data-i18n="section.context">Project & AI System Context</h3>
                         
                         <div class="form-group">
@@ -1014,7 +1231,7 @@
                         </div>
                     </div>
 
-                    <div class="form-section">
+                    <div class="form-section scroll-reveal-right">
                         <h3 class="section-title" data-i18n="section.properties">AI System Properties</h3>
                         
                         <div class="form-group">
@@ -1053,7 +1270,7 @@
                     </div>
                 </div>
 
-                <div class="info-box" id="infoBox1">
+                <div class="info-box scroll-reveal" id="infoBox1">
                     <strong>⚠️ P3 AI Policy:</strong> Currently, only the following AI tools are approved for use:
                     <ul style="margin: 10px 0 0 0; padding-left: 20px;">
                         <li><strong>AI Builder in Power Platform</strong> - for automation and intelligent workflows</li>
@@ -1062,30 +1279,35 @@
                     All other AI systems (including ChatGPT, Claude, GitHub Copilot, etc.) <strong>require IT approval</strong> before use. Please contact the IT department for assessment.
                 </div>
                 
-                <div class="info-box" style="margin-top: 15px;" id="infoBox2">
+                <div class="info-box scroll-reveal" style="margin-top: 15px;" id="infoBox2">
                     <strong data-i18n="info.note">Note:</strong> <span data-i18n="info.disclaimer">This tool provides an initial risk assessment of AI systems in the context of P3 consulting projects, considering the EU AI Act and GDPR.</span>
+                </div>
                 </div>
             </div>
         </div>
 
-        <div id="results" class="tab-content">
+        <div id="results" class="tab-content scroll-section">
             <div class="content">
+                <div class="content-wrapper">
                 <div id="resultsContent">
                     <div class="empty-state">
                         <div class="empty-state-icon">📊</div>
                         <p data-i18n="empty.results">Please complete the assessment first.</p>
                     </div>
                 </div>
+                </div>
             </div>
         </div>
 
-        <div id="measures" class="tab-content">
+        <div id="measures" class="tab-content scroll-section">
             <div class="content">
+                <div class="content-wrapper">
                 <div id="measuresContent">
                     <div class="empty-state">
                         <div class="empty-state-icon">✅</div>
                         <p data-i18n="empty.measures">Please complete the assessment first.</p>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -1141,13 +1363,7 @@
             currentTheme = currentTheme === 'light' ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', currentTheme);
             localStorage.setItem('theme', currentTheme);
-            
-            const themeBtn = document.getElementById('themeBtn');
-            if (currentTheme === 'dark') {
-                themeBtn.textContent = '☀️ Light Mode';
-            } else {
-                themeBtn.textContent = '🌙 Dark Mode';
-            }
+            updateThemeButtons();
         }
 
         const translations = {
@@ -1351,8 +1567,19 @@
             document.getElementById('headerTitle').textContent = lang.headerTitle;
             document.getElementById('headerSubtitle').textContent = lang.headerSubtitle;
             
-            // Update language button
-            document.getElementById('languageBtn').textContent = lang.languageBtn;
+            // Update language buttons
+            const langBtns = [document.getElementById('languageBtn'), document.getElementById('languageBtn2')];
+            langBtns.forEach((btn, index) => {
+                if (btn) {
+                    // Sticky header button (short version)
+                    if (index === 0) {
+                        btn.textContent = currentLanguage === 'en' ? '🇩🇪' : '🇬🇧';
+                    } else {
+                        // Regular button (full text version)
+                        btn.textContent = lang.languageBtn;
+                    }
+                }
+            });
             
             // Update tabs
             document.querySelector('[data-tab="assessment"]').textContent = lang['tab.assessment'];
@@ -1432,16 +1659,41 @@
         }
 
         function showTab(tabName) {
+            // Remove active class from all tabs
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to selected tab
+            const tabContent = document.getElementById(tabName);
+            if (tabContent) {
+                tabContent.classList.add('active');
+            }
             
             // Activate the corresponding tab button
             const tabButton = document.querySelector(`.tab[data-tab="${tabName}"]`);
             if (tabButton) {
                 tabButton.classList.add('active');
             }
+            
+            // Smooth scroll to the section
+            const section = document.getElementById(tabName);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
+        
+        // Add smooth scrolling for sticky nav links
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.sticky-nav-item').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    
+                    // Show the tab first
+                    showTab(targetId);
+                });
+            });
+        });
         
         function getSelectedValues(selectId) {
             const select = document.getElementById(selectId);
@@ -1703,7 +1955,7 @@
             }
             
             document.getElementById('resultsContent').innerHTML = `
-                <div class="result-card">
+                <div class="result-card scroll-reveal-scale">
                     <div class="result-header">
                         <div class="result-title">${lang['result.riskAssessment']}</div>
                         <span class="risk-badge ${riskClass}">${riskLabel}</span>
@@ -1716,7 +1968,7 @@
                     <p><strong>${lang['result.recommendedMeasures']}:</strong> ${assessment.measures.length}</p>
                 </div>
                 
-                <div class="result-card">
+                <div class="result-card scroll-reveal">
                     <div class="result-title">${currentLanguage === 'de' ? 'Risikoanalyse nach Kategorien' : 'Risk Breakdown by Category'}</div>
                     <div style="margin-top: 15px;">
                         <div style="display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; margin-bottom: 8px; border-radius: 4px;">
@@ -1742,7 +1994,7 @@
                     </div>
                 </div>
                 
-                <div class="result-card">
+                <div class="result-card scroll-reveal-left">
                     <div class="result-title">${currentLanguage === 'de' ? 'Datensensibilitäts-Analyse' : 'Data Sensitivity Analysis'}</div>
                     <p style="margin-top: 10px;"><strong>${currentLanguage === 'de' ? 'Verarbeitete Datentypen' : 'Processed Data Types'}:</strong></p>
                     <ul style="margin: 10px 0; padding-left: 20px;">
@@ -1766,7 +2018,7 @@
                     ` : ''}
                 </div>
                 
-                <div class="result-card">
+                <div class="result-card scroll-reveal-right">
                     <div class="result-title">${currentLanguage === 'de' ? 'Compliance-Anforderungen' : 'Compliance Requirements'}</div>
                     ${complianceReqs.length > 0 ? `
                         <ul style="margin: 15px 0; padding-left: 20px;">
@@ -1781,7 +2033,7 @@
                     `}
                 </div>
                 
-                <div class="result-card">
+                <div class="result-card scroll-reveal-scale">
                     <div class="result-title">${lang['result.assessmentDetails']}</div>
                     <p><strong>${lang['result.aiTool']}:</strong> ${getSelectedLabels('aiTool')}</p>
                     <p><strong>${lang['result.aiUseCase']}:</strong> ${getSelectedLabels('aiUseCase').join(', ')}</p>
@@ -1792,10 +2044,12 @@
                 </div>
             `;
             
-            let measuresHTML = `<h3 class="section-title">${lang['measures.title']}</h3>`;
+            let measuresHTML = `<h3 class="section-title scroll-reveal">${lang['measures.title']}</h3>`;
+            const animationClasses = ['scroll-reveal-left', 'scroll-reveal-right'];
             assessment.measures.forEach((measure, index) => {
+                const revealClass = animationClasses[index % 2];
                 measuresHTML += `
-                    <div class="measure-item">
+                    <div class="measure-item ${revealClass}">
                         <div class="measure-title">${index + 1}. ${measure.title}</div>
                         <div>${measure.description}</div>
                     </div>
@@ -1803,6 +2057,13 @@
             });
             
             document.getElementById('measuresContent').innerHTML = measuresHTML;
+            
+            // Re-setup scroll reveal for dynamically added elements
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setupScrollReveal();
+                });
+            });
         }
 
         function downloadPDF() {
@@ -1886,38 +2147,86 @@
             if (savedTheme) {
                 currentTheme = savedTheme;
                 document.documentElement.setAttribute('data-theme', currentTheme);
-                const themeBtn = document.getElementById('themeBtn');
-                if (currentTheme === 'dark') {
-                    themeBtn.textContent = '☀️ Light Mode';
-                } else {
-                    themeBtn.textContent = '🌙 Dark Mode';
-                }
+                updateThemeButtons();
             }
             
-            // Add scroll animations
-            observeElements();
+            // Initialize scroll effects
+            initScrollEffects();
+            setupScrollReveal();
         };
         
-        // Intersection Observer for scroll animations
-        function observeElements() {
-            const observer = new IntersectionObserver((entries) => {
+        function updateThemeButtons() {
+            const themeBtns = [document.getElementById('themeBtn'), document.getElementById('themeBtn2')];
+            themeBtns.forEach(btn => {
+                if (btn) {
+                    if (currentTheme === 'dark') {
+                        btn.textContent = btn === themeBtns[0] ? '☀️' : '☀️ Light Mode';
+                    } else {
+                        btn.textContent = btn === themeBtns[0] ? '🌙' : '🌙 Dark Mode';
+                    }
+                }
+            });
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Scroll effects
+        function initScrollEffects() {
+            const stickyHeader = document.getElementById('stickyHeader');
+            const scrollProgress = document.getElementById('scrollProgress');
+            let lastScroll = 0;
+            
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+                const windowHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const progress = (currentScroll / windowHeight) * 100;
+                
+                // Update scroll progress bar
+                scrollProgress.style.width = progress + '%';
+                
+                // Hide/show sticky header based on scroll direction
+                if (currentScroll > 100) {
+                    if (currentScroll > lastScroll) {
+                        // Scrolling down
+                        stickyHeader.classList.add('hidden');
+                    } else {
+                        // Scrolling up
+                        stickyHeader.classList.remove('hidden');
+                    }
+                } else {
+                    // At top of page
+                    stickyHeader.classList.remove('hidden');
+                }
+                
+                lastScroll = currentScroll;
+            });
+        }
+        
+        // Setup scroll reveal animations
+        function setupScrollReveal() {
+            const revealElements = document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale');
+            
+            const revealObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
+                        entry.target.classList.add('revealed');
                     }
                 });
             }, {
                 threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
+                rootMargin: '0px 0px -100px 0px'
             });
             
-            document.querySelectorAll('.form-section, .result-card, .measure-item').forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(20px)';
-                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                observer.observe(el);
+            revealElements.forEach(el => {
+                revealObserver.observe(el);
             });
+        }
+        
+        // Intersection Observer for scroll animations (legacy support)
+        function observeElements() {
+            setupScrollReveal();
         }
     </script>
 </body>
