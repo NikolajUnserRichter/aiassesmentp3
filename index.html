@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>P3 AI Risk Assessment Tool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             /* Light mode colors */
@@ -280,7 +283,7 @@
         .theme-toggle:hover, .language-toggle button:hover {
             color: white;
             border-color: var(--primary-dark);
-            transform: translateY(-3px) scale(1.05);
+            transform: translate3d(0, -3px, 0) scale(1.05);
             box-shadow: 0 12px 28px var(--shadow-hover),
                         0 4px 12px rgba(124, 179, 66, 0.3);
         }
@@ -395,7 +398,7 @@
         .tab:hover {
             background: var(--hover-bg);
             color: var(--text-secondary);
-            transform: translateY(-3px) scale(1.02);
+            transform: translate3d(0, -3px, 0) scale(1.02);
         }
 
         .tab.active {
@@ -415,7 +418,7 @@
         .form-grid {
             display: grid;
             gap: clamp(20px, 3vw, 35px);
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 500px), 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         }
 
         .form-section {
@@ -442,7 +445,7 @@
         }
 
         .form-section:hover {
-            transform: translateY(-8px) scale(1.01);
+            transform: translate3d(0, -8px, 0) scale(1.01);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
                         0 8px 24px rgba(0, 0, 0, 0.08);
             border-left-width: 6px;
@@ -518,7 +521,7 @@
             box-shadow: 0 0 0 4px rgba(124, 179, 66, 0.15),
                         0 8px 28px rgba(124, 179, 66, 0.25),
                         0 2px 8px rgba(0, 0, 0, 0.08);
-            transform: translateY(-3px) scale(1.01);
+            transform: translate3d(0, -3px, 0) scale(1.01);
         }
         
         select[multiple] {
@@ -571,7 +574,7 @@
         }
 
         .result-card:hover {
-            transform: translateY(-8px) scale(1.01);
+            transform: translate3d(0, -8px, 0) scale(1.01);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
                         0 8px 24px rgba(0, 0, 0, 0.08);
             border-color: var(--primary-color);
@@ -610,7 +613,7 @@
         }
 
         .risk-badge:hover {
-            transform: scale(1.08) translateY(-2px);
+            transform: translate3d(0, -2px, 0) scale(1.08);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2),
                         0 4px 12px rgba(0, 0, 0, 0.15);
         }
@@ -660,7 +663,7 @@
         .measure-item:nth-child(6) { animation-delay: 0.5s; }
 
         .measure-item:hover {
-            transform: translateX(12px) scale(1.01);
+            transform: translate3d(12px, 0, 0) scale(1.01);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
                         0 2px 8px rgba(0, 0, 0, 0.06);
             border-left-width: 7px;
@@ -726,7 +729,7 @@
         }
 
         .btn-primary:hover {
-            transform: translateY(-4px) scale(1.02);
+            transform: translate3d(0, -4px, 0) scale(1.02);
             box-shadow: 0 12px 36px rgba(124, 179, 66, 0.45),
                         0 4px 12px rgba(124, 179, 66, 0.3);
         }
@@ -744,7 +747,7 @@
         .btn-secondary:hover {
             background: var(--primary-color);
             color: white;
-            transform: translateY(-4px) scale(1.02);
+            transform: translate3d(0, -4px, 0) scale(1.02);
             box-shadow: 0 12px 36px rgba(124, 179, 66, 0.35),
                         0 4px 12px rgba(124, 179, 66, 0.25);
         }
@@ -775,7 +778,7 @@
         }
 
         .info-box:hover {
-            transform: translateY(-3px) scale(1.01);
+            transform: translate3d(0, -3px, 0) scale(1.01);
             box-shadow: 0 10px 32px rgba(33, 150, 243, 0.25),
                         0 4px 12px rgba(33, 150, 243, 0.15);
             border-left-width: 6px;
