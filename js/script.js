@@ -447,7 +447,7 @@ function calculateRisk() {
     // Automatically navigate to results tab when form is complete
     setTimeout(() => {
         showTab('results');
-        // Scroll to top of page for better user experience
+        // Intentionally scroll to top for results view to show full page
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, AUTO_NAVIGATION_DELAY_MS);
 }
