@@ -64,6 +64,9 @@ const translations = {
     en: {
         headerTitle: 'P3 AI Risk Assessment Tool',
         headerSubtitle: 'Strategic Assessment of AI Systems for Consulting Projects',
+        'intro.title': 'AI Risk Assessment for Your Projects',
+        'intro.description': 'This tool provides a comprehensive risk assessment for AI systems used in P3 consulting projects. It evaluates compliance with the EU AI Act and GDPR, helping you make informed decisions about AI tool usage. Complete the assessment to receive tailored recommendations and risk mitigation strategies.',
+        'btn.startAssessment': '🚀 Start Assessment',
         'tab.assessment': 'Assessment',
         'tab.results': 'Risk Analysis',
         'tab.measures': 'Recommendations',
@@ -154,6 +157,9 @@ const translations = {
     de: {
         headerTitle: 'P3 AI Risk Assessment Tool',
         headerSubtitle: 'Strategische Bewertung von KI-Systemen für Consulting-Projekte',
+        'intro.title': 'KI-Risikobewertung für Ihre Projekte',
+        'intro.description': 'Dieses Tool bietet eine umfassende Risikobewertung für KI-Systeme, die in P3-Beratungsprojekten eingesetzt werden. Es bewertet die Einhaltung des EU AI Act und der DSGVO und hilft Ihnen, fundierte Entscheidungen über die Verwendung von KI-Tools zu treffen. Führen Sie die Bewertung durch, um maßgeschneiderte Empfehlungen und Risikominderungsstrategien zu erhalten.',
+        'btn.startAssessment': '🚀 Assessment starten',
         'tab.assessment': 'Assessment',
         'tab.results': 'Risiko-Analyse',
         'tab.measures': 'Empfehlungen',
@@ -369,10 +375,17 @@ function showTab(tabName) {
         tabButton.classList.add('active');
     }
     
-    // Smooth scroll to the section
+    // Smooth scroll to the section with proper offset to keep tabs visible
     const section = document.getElementById(tabName);
     if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const headerOffset = 100; // Offset to keep sticky header and tabs visible
+        const elementPosition = section.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
     }
 }
 
@@ -864,6 +877,29 @@ function updateThemeButtons() {
 
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Scroll to Assessment section and activate tab
+function scrollToAssessment(event) {
+    if (event) {
+        event.preventDefault();
+    }
+    
+    // First, switch to the assessment tab
+    showTab('assessment');
+    
+    // Then scroll to the assessment section with proper offset
+    const assessmentSection = document.getElementById('assessment');
+    if (assessmentSection) {
+        const headerOffset = 120; // Account for sticky header and tabs
+        const elementPosition = assessmentSection.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+    }
 }
 
 // Scroll effects
