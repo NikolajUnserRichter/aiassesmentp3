@@ -17,6 +17,9 @@ let currentAssessment = null;
 let currentLanguage = 'en'; // Default language
 let currentTheme = 'light'; // Default theme
 
+// ===== CONSTANTS =====
+const SCROLL_OFFSET = 120; // Offset in pixels for smooth scrolling to keep header/tabs visible
+
 // Define approved AI tools list
 const APPROVED_AI_TOOLS = ['m365_copilot', 'ai_builder'];
 
@@ -378,9 +381,8 @@ function showTab(tabName) {
     // Smooth scroll to the section with proper offset to keep tabs visible
     const section = document.getElementById(tabName);
     if (section) {
-        const headerOffset = 100; // Offset to keep sticky header and tabs visible
         const elementPosition = section.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        const offsetPosition = elementPosition + window.pageYOffset - SCROLL_OFFSET;
         
         window.scrollTo({
             top: offsetPosition,
@@ -891,9 +893,8 @@ function scrollToAssessment(event) {
     // Then scroll to the assessment section with proper offset
     const assessmentSection = document.getElementById('assessment');
     if (assessmentSection) {
-        const headerOffset = 120; // Account for sticky header and tabs
         const elementPosition = assessmentSection.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        const offsetPosition = elementPosition + window.pageYOffset - SCROLL_OFFSET;
         
         window.scrollTo({
             top: offsetPosition,
