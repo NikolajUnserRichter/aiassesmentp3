@@ -171,7 +171,7 @@
 .intro-section h2 {
     font-size: clamp(28px, 4vw, 42px);
     font-weight: 700;
-    color: var(--midnight-blue);
+    color: var(--text-primary);
     margin-bottom: clamp(20px, 3vh, 30px);
     line-height: 1.2;
     text-shadow: 0 2px 12px rgba(255, 255, 255, 0.95),
@@ -182,7 +182,7 @@
 
 .intro-section p {
     font-size: clamp(16px, 2vw, 20px);
-    color: var(--secondary-color);
+    color: var(--text-secondary);
     line-height: 1.7;
     margin-bottom: clamp(30px, 4vh, 40px);
     max-width: 750px;
