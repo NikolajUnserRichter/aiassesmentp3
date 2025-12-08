@@ -1,40 +1,46 @@
 /**
- * CSS Custom Properties - Color Scheme
+ * CSS Custom Properties - P3 Corporate Color Scheme
  * 
- * Primary Brand Color: Green (#7cb342) - harmonious green tone
- * This balanced, professional color represents growth and sustainability
+ * Based on P3 Corporate Design Guidelines (ColourCodes_P3_2024.pdf)
  * 
- * Color Application Strategy:
- * - Primary: Main brand color for key elements (buttons, headings, accents)
- * - Primary Dark: Hover states and emphasis
- * - Primary Light: Backgrounds and subtle highlights
- * - Secondary: Complementary green for gradients
- * - Accent: Warm orange for calls-to-action and important highlights
+ * Primary Colors:
+ * - Lemon Splash (#dbff55) - Primary brand color for optimism, openness, growth
+ * - Electric Blue (#0000ff) - For trust, innovation, dynamic elements
+ * - Green Day Vibe (#005b4c) - For sustainability, autonomy, energy topics
+ * 
+ * Secondary Colors:
+ * - Flying Salmink (#ff7f6a) - For highlights, drive, confidence
+ * - Purple Rain (#6544fe) - For creativity, transformation, originality
+ * - Midnight Blue (#00002d) - For fonts, strength, dependability
  */
 
 :root {
-    /* Light mode colors */
-    --primary-color: #7cb342;
-    --primary-dark: #558b2f;
-    --primary-light: #aed581;
-    --secondary-color: #66bb6a;
-    --accent-color: #ffa726;
-    --background-gradient-start: #e8f5e9;
-    --background-gradient-end: #c5e1a5;
+    /* P3 Corporate Colors - Light Mode */
+    --primary-color: #dbff55; /* Lemon Splash */
+    --primary-dark: #c5e526; /* Darker variant of Lemon Splash */
+    --primary-light: #e8ff8a; /* Lighter variant of Lemon Splash */
+    --secondary-color: #005b4c; /* Green Day Vibe */
+    --accent-color: #ff7f6a; /* Flying Salmink */
+    --electric-blue: #0000ff; /* Electric Blue */
+    --purple-rain: #6544fe; /* Purple Rain */
+    --midnight-blue: #00002d; /* Midnight Blue */
+    
+    --background-gradient-start: #f5ffe8;
+    --background-gradient-end: #dbff55;
     --card-bg: rgba(255, 255, 255, 0.95);
     --glass-bg: rgba(255, 255, 255, 0.1);
     --glass-border: rgba(255, 255, 255, 0.2);
-    --text-primary: #1b5e20;
-    --text-secondary: #558b2f;
-    --text-muted: #689f38;
+    --text-primary: #00002d; /* Midnight Blue for primary text */
+    --text-secondary: #005b4c; /* Green Day Vibe for secondary text */
+    --text-muted: #4a7c6c;
     
     --shadow-color: rgba(0, 0, 0, 0.1);
     --shadow-hover: rgba(0, 0, 0, 0.15);
     --border-color: #e0e0e0;
-    --section-bg: #f1f8e9;
+    --section-bg: #f5ffe8;
     --input-bg: #ffffff;
-    --input-border: #c5e1a5;
-    --hover-bg: #f1f8e9;
+    --input-border: #dbff55;
+    --hover-bg: #f5ffe8;
     
     /* ===== SPACING SYSTEM ===== */
     /* Fluid spacing using clamp for responsive design */
@@ -59,25 +65,29 @@
 
 /* ===== DARK MODE THEME ===== */
 [data-theme="dark"] {
-    /* Dark mode colors */
-    --primary-color: #9ccc65;
-    --primary-dark: #7cb342;
-    --primary-light: #c5e1a5;
-    --secondary-color: #81c784;
-    --accent-color: #ffb74d;
-    --background-gradient-start: #1a1a2e;
-    --background-gradient-end: #16213e;
+    /* P3 Corporate Colors - Dark Mode */
+    --primary-color: #dbff55; /* Lemon Splash */
+    --primary-dark: #c5e526;
+    --primary-light: #e8ff8a;
+    --secondary-color: #008b7a; /* Lighter Green Day Vibe for dark mode */
+    --accent-color: #ff7f6a; /* Flying Salmink */
+    --electric-blue: #3366ff; /* Lighter Electric Blue */
+    --purple-rain: #8577ff; /* Lighter Purple Rain */
+    --midnight-blue: #1a1a3d;
+    
+    --background-gradient-start: #0a0a0f;
+    --background-gradient-end: #1a1a2e;
     --card-bg: rgba(30, 30, 45, 0.95);
     --glass-bg: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.1);
-    --text-primary: #e8f5e9;
-    --text-secondary: #c5e1a5;
-    --text-muted: #a5d6a7;
+    --text-primary: #f5ffe8;
+    --text-secondary: #dbff55;
+    --text-muted: #a8c620;
     --shadow-color: rgba(0, 0, 0, 0.3);
     --shadow-hover: rgba(0, 0, 0, 0.4);
     --border-color: #424242;
     --section-bg: rgba(40, 40, 60, 0.6);
     --input-bg: rgba(50, 50, 70, 0.8);
-    --input-border: #558b2f;
+    --input-border: #dbff55;
     --hover-bg: rgba(60, 60, 80, 0.6);
 }

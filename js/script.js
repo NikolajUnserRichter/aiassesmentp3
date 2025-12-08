@@ -16,6 +16,11 @@
 let currentAssessment = null;
 let currentLanguage = 'en'; // Default language
 let currentTheme = 'light'; // Default theme
+let currentStep = 1; // Current wizard step
+
+// ===== CONSTANTS =====
+const SCROLL_OFFSET = 120; // Offset in pixels for smooth scrolling to keep header/tabs visible
+const TOTAL_STEPS = 2; // Number of wizard steps
 
 // Define approved AI tools list
 const APPROVED_AI_TOOLS = ['m365_copilot', 'ai_builder'];
@@ -64,6 +69,15 @@ const translations = {
     en: {
         headerTitle: 'P3 AI Risk Assessment Tool',
         headerSubtitle: 'Strategic Assessment of AI Systems for Consulting Projects',
+        'intro.title': 'AI Risk Assessment for Your Projects',
+        'intro.description': 'This tool provides a comprehensive risk assessment for AI systems used in P3 consulting projects. It evaluates compliance with the EU AI Act and GDPR, helping you make informed decisions about AI tool usage. Complete the assessment to receive tailored recommendations and risk mitigation strategies.',
+        'btn.startAssessment': '🚀 Start Assessment',
+        'step.context': 'Context',
+        'step.properties': 'Properties',
+        'step.analysis': 'Analysis',
+        'btn.previous': '← Previous',
+        'btn.next': 'Next →',
+        'btn.finish': '🎯 View Results',
         'tab.assessment': 'Assessment',
         'tab.results': 'Risk Analysis',
         'tab.measures': 'Recommendations',
@@ -154,6 +168,15 @@ const translations = {
     de: {
         headerTitle: 'P3 AI Risk Assessment Tool',
         headerSubtitle: 'Strategische Bewertung von KI-Systemen für Consulting-Projekte',
+        'intro.title': 'KI-Risikobewertung für Ihre Projekte',
+        'intro.description': 'Dieses Tool bietet eine umfassende Risikobewertung für KI-Systeme, die in P3-Beratungsprojekten eingesetzt werden. Es bewertet die Einhaltung des EU AI Act und der DSGVO und hilft Ihnen, fundierte Entscheidungen über die Verwendung von KI-Tools zu treffen. Führen Sie die Bewertung durch, um maßgeschneiderte Empfehlungen und Risikominderungsstrategien zu erhalten.',
+        'btn.startAssessment': '🚀 Assessment starten',
+        'step.context': 'Kontext',
+        'step.properties': 'Eigenschaften',
+        'step.analysis': 'Analyse',
+        'btn.previous': '← Zurück',
+        'btn.next': 'Weiter →',
+        'btn.finish': '🎯 Ergebnisse anzeigen',
         'tab.assessment': 'Assessment',
         'tab.results': 'Risiko-Analyse',
         'tab.measures': 'Empfehlungen',
@@ -369,10 +392,16 @@ function showTab(tabName) {
         tabButton.classList.add('active');
     }
     
-    // Smooth scroll to the section
+    // Smooth scroll to the section with proper offset to keep tabs visible
     const section = document.getElementById(tabName);
     if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        const elementPosition = section.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - SCROLL_OFFSET;
+        
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
     }
 }
 
@@ -432,8 +461,6 @@ function calculateRisk() {
     // Automatically navigate to results tab when form is complete
     setTimeout(() => {
         showTab('results');
-        // Scroll to top of page for better user experience
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     }, AUTO_NAVIGATION_DELAY_MS);
 }
 
@@ -825,6 +852,9 @@ function resetForm() {
         </div>
     `;
     
+    // Reset wizard to step 1
+    resetWizard();
+    
     showTab('assessment');
 }
 
@@ -864,6 +894,28 @@ function updateThemeButtons() {
 
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Scroll to Assessment section and activate tab
+function scrollToAssessment(event) {
+    if (event) {
+        event.preventDefault();
+    }
+    
+    // First, switch to the assessment tab
+    showTab('assessment');
+    
+    // Then scroll to the assessment section with proper offset
+    const assessmentSection = document.getElementById('assessment');
+    if (assessmentSection) {
+        const elementPosition = assessmentSection.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - SCROLL_OFFSET;
+        
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+    }
 }
 
 // Scroll effects
@@ -921,4 +973,162 @@ function setupScrollReveal() {
 // Intersection Observer for scroll animations (legacy support)
 function observeElements() {
     setupScrollReveal();
+}
+
+// ===== WIZARD NAVIGATION FUNCTIONS =====
+
+/**
+ * Show a specific wizard step
+ */
+function showWizardStep(stepNumber) {
+    // Hide all steps
+    document.querySelectorAll('.wizard-step').forEach(step => {
+        step.classList.remove('active');
+    });
+    
+    // Show the requested step
+    const step = document.getElementById(`step${stepNumber}`);
+    if (step) {
+        step.classList.add('active');
+    }
+    
+    // Update step indicator
+    updateStepIndicator(stepNumber);
+    
+    // Update navigation buttons
+    updateNavigationButtons(stepNumber);
+    
+    // Update current step
+    currentStep = stepNumber;
+}
+
+/**
+ * Update the step indicator visual state
+ */
+function updateStepIndicator(activeStep) {
+    document.querySelectorAll('.step').forEach((step, index) => {
+        const stepNum = index + 1;
+        step.classList.remove('active', 'completed');
+        
+        if (stepNum < activeStep) {
+            step.classList.add('completed');
+        } else if (stepNum === activeStep) {
+            step.classList.add('active');
+        }
+    });
+}
+
+/**
+ * Update navigation button visibility and state
+ */
+function updateNavigationButtons(stepNumber) {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const finishBtn = document.getElementById('finishBtn');
+    
+    // Show/hide previous button
+    prevBtn.style.display = stepNumber > 1 ? 'block' : 'none';
+    
+    // Show/hide next vs finish button
+    if (stepNumber < TOTAL_STEPS) {
+        nextBtn.style.display = 'block';
+        finishBtn.style.display = 'none';
+    } else {
+        nextBtn.style.display = 'none';
+        finishBtn.style.display = 'block';
+    }
+}
+
+/**
+ * Move to the next step
+ */
+function nextStep() {
+    // Validate current step before proceeding
+    if (!validateCurrentStep()) {
+        return;
+    }
+    
+    if (currentStep < TOTAL_STEPS) {
+        showWizardStep(currentStep + 1);
+    }
+}
+
+/**
+ * Move to the previous step
+ */
+function previousStep() {
+    if (currentStep > 1) {
+        showWizardStep(currentStep - 1);
+    }
+}
+
+/**
+ * Validate the current step's required fields
+ */
+function validateCurrentStep() {
+    if (currentStep === 1) {
+        // Validate step 1: Project & AI System Context
+        const projectType = document.getElementById('projectType').value;
+        const aiTool = document.getElementById('aiTool').value;
+        const aiUseCases = getSelectedValues('aiUseCase');
+        const dataTypes = getSelectedValues('dataType');
+        
+        if (!projectType) {
+            alert(currentLanguage === 'en' ? 'Please select a project type.' : 'Bitte wählen Sie einen Projekttyp.');
+            return false;
+        }
+        if (!aiTool) {
+            alert(currentLanguage === 'en' ? 'Please select an AI tool.' : 'Bitte wählen Sie ein KI-Tool.');
+            return false;
+        }
+        if (aiUseCases.length === 0) {
+            alert(currentLanguage === 'en' ? 'Please select at least one AI use case.' : 'Bitte wählen Sie mindestens einen KI-Anwendungsfall.');
+            return false;
+        }
+        if (dataTypes.length === 0) {
+            alert(currentLanguage === 'en' ? 'Please select at least one data type.' : 'Bitte wählen Sie mindestens einen Datentyp.');
+            return false;
+        }
+    } else if (currentStep === 2) {
+        // Validate step 2: AI System Properties
+        const autonomy = document.getElementById('autonomy').value;
+        const impact = document.getElementById('impact').value;
+        const transparency = document.getElementById('transparency').value;
+        
+        if (!autonomy) {
+            alert(currentLanguage === 'en' ? 'Please select the level of autonomy.' : 'Bitte wählen Sie den Autonomiegrad.');
+            return false;
+        }
+        if (!impact) {
+            alert(currentLanguage === 'en' ? 'Please select the impact scope.' : 'Bitte wählen Sie den Auswirkungsbereich.');
+            return false;
+        }
+        if (!transparency) {
+            alert(currentLanguage === 'en' ? 'Please select the transparency level.' : 'Bitte wählen Sie die Transparenz.');
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+/**
+ * Finish the assessment and calculate risk
+ */
+function finishAssessment() {
+    // Validate final step
+    if (!validateCurrentStep()) {
+        return;
+    }
+    
+    // Perform the risk calculation
+    calculateRisk();
+}
+
+/**
+ * Reset the wizard to step 1
+ */
+function resetWizard() {
+    currentStep = 1;
+    showWizardStep(1);
 }
