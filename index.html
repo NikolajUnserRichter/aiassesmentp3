@@ -71,13 +71,33 @@
         <div id="assessment" class="tab-content active scroll-section">
             <div class="content">
                 <div class="content-wrapper">
-                <div class="form-grid scroll-reveal">
-                    <div class="form-section scroll-reveal-left">
+                
+                <!-- Step Indicator -->
+                <div class="step-indicator" id="stepIndicator">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label" data-i18n="step.context">Context</div>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label" data-i18n="step.properties">Properties</div>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label" data-i18n="step.analysis">Analysis</div>
+                    </div>
+                </div>
+                
+                <!-- Step 1: Project & AI System Context -->
+                <div class="wizard-step active" id="step1">
+                    <div class="form-section scroll-reveal">
                         <h3 class="section-title" data-i18n="section.context">Project & AI System Context</h3>
                         
                         <div class="form-group">
                             <label class="form-label" data-i18n="label.projectType">Project Type / Area:</label>
-                            <select id="projectType" onchange="calculateRisk()">
+                            <select id="projectType">
                                 <option value="" data-i18n="option.pleaseSelect">Please select...</option>
                                 <option value="strategy" data-i18n="option.strategy">Strategy Consulting & Business Development</option>
                                 <option value="digital_transformation" data-i18n="option.digitalTransformation">Digital Transformation</option>
@@ -91,7 +111,7 @@
 
                         <div class="form-group">
                             <label class="form-label" data-i18n="label.aiTool">AI Tool / System:</label>
-                            <select id="aiTool" onchange="calculateRisk()">
+                            <select id="aiTool">
                                 <option value="" data-i18n="option.pleaseSelect">Please select...</option>
                                 <optgroup label="✅ Approved Tools">
                                     <option value="m365_copilot" data-i18n="option.m365Copilot">M365 Copilot</option>
@@ -117,13 +137,13 @@
 
                         <div class="form-group">
                             <label class="form-label" data-i18n="label.aiUseCase">AI Use Case:</label>
-                            <select id="aiUseCase" onchange="calculateRisk()" multiple>
+                            <select id="aiUseCase" multiple>
                                 <option value="" data-i18n="option.pleaseSelect">Please select...</option>
                                 <option value="client_advisory" data-i18n="option.clientAdvisory">Client Advisory & Insight Generation</option>
                                 <option value="predictive_analytics" data-i18n="option.predictiveAnalytics">Predictive Analytics & Forecasting</option>
                                 <option value="automation" data-i18n="option.automation">Process Automation</option>
                                 <option value="decision_support" data-i18n="option.decisionSupport">Decision Support System</option>
-                                <option value="nlp_analysis" data-i18n="option.nlpAnalysis">NLP & Document Analysis</option>
+                                <option value="nlp_analysis" data-i18n="option.nlpAnalytics">NLP & Document Analysis</option>
                                 <option value="code_generation" data-i18n="option.codeGeneration">Code Generation & Testing</option>
                                 <option value="resource_allocation" data-i18n="option.resourceAllocation">Resource & Project Allocation</option>
                                 <option value="risk_assessment" data-i18n="option.riskAssessment">Risk Assessment & Compliance</option>
@@ -132,7 +152,7 @@
 
                         <div class="form-group">
                             <label class="form-label" data-i18n="label.dataType">Processed Data Types:</label>
-                            <select id="dataType" onchange="calculateRisk()" multiple>
+                            <select id="dataType" multiple>
                                 <option value="" data-i18n="option.pleaseSelect">Please select...</option>
                                 <option value="public_only" data-i18n="option.publicOnly">Public data only</option>
                                 <option value="company_general" data-i18n="option.companyGeneral">General company data (anonymized)</option>
@@ -142,14 +162,26 @@
                                 <option value="special_categories" data-i18n="option.specialCategories">Special categories of personal data</option>
                             </select>
                         </div>
+                        
+                        <div class="info-box" id="infoBox1" style="margin-top: 20px;">
+                            <strong>⚠️ P3 AI Policy:</strong> Currently, only the following AI tools are approved for use:
+                            <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                                <li><strong>AI Builder in Power Platform</strong> - for automation and intelligent workflows</li>
+                                <li><strong>M365 Copilot</strong> - for productivity enhancement in Microsoft 365</li>
+                            </ul>
+                            All other AI systems (including ChatGPT, Claude, GitHub Copilot, etc.) <strong>require IT approval</strong> before use. Please contact the IT department for assessment.
+                        </div>
                     </div>
-
-                    <div class="form-section scroll-reveal-right">
+                </div>
+                
+                <!-- Step 2: AI System Properties -->
+                <div class="wizard-step" id="step2">
+                    <div class="form-section scroll-reveal">
                         <h3 class="section-title" data-i18n="section.properties">AI System Properties</h3>
                         
                         <div class="form-group">
                             <label class="form-label" data-i18n="label.autonomy">Level of Autonomy:</label>
-                            <select id="autonomy" onchange="calculateRisk()">
+                            <select id="autonomy">
                                 <option value="" data-i18n="option.pleaseSelect">Please select...</option>
                                 <option value="support_only" data-i18n="option.supportOnly">Support: AI generates suggestions/insights</option>
                                 <option value="interactive" data-i18n="option.interactive">Interactive: AI communicates with stakeholders</option>
@@ -161,7 +193,7 @@
 
                         <div class="form-group">
                             <label class="form-label" data-i18n="label.impact">Impact Scope:</label>
-                            <select id="impact" onchange="calculateRisk()">
+                            <select id="impact">
                                 <option value="" data-i18n="option.pleaseSelect">Please select...</option>
                                 <option value="internal_efficiency" data-i18n="option.internalEfficiency">Internal efficiency (low impact)</option>
                                 <option value="project_support" data-i18n="option.projectSupport">Project support (medium impact)</option>
@@ -173,28 +205,33 @@
 
                         <div class="form-group">
                             <label class="form-label" data-i18n="label.transparency">AI System Transparency:</label>
-                            <select id="transparency" onchange="calculateRisk()">
+                            <select id="transparency">
                                 <option value="" data-i18n="option.pleaseSelect">Please select...</option>
                                 <option value="high" data-i18n="option.transparencyHigh">High: Decisions fully traceable</option>
                                 <option value="medium" data-i18n="option.transparencyMedium">Medium: Key factors explainable</option>
                                 <option value="low" data-i18n="option.transparencyLow">Low: Black-box system</option>
                             </select>
                         </div>
+                        
+                        <div class="info-box" id="infoBox2" style="margin-top: 20px;">
+                            <strong data-i18n="info.note">Note:</strong> <span data-i18n="info.disclaimer">This tool provides an initial risk assessment of AI systems in the context of P3 consulting projects, considering the EU AI Act and GDPR.</span>
+                        </div>
                     </div>
                 </div>
-
-                <div class="info-box scroll-reveal" id="infoBox1">
-                    <strong>⚠️ P3 AI Policy:</strong> Currently, only the following AI tools are approved for use:
-                    <ul style="margin: 10px 0 0 0; padding-left: 20px;">
-                        <li><strong>AI Builder in Power Platform</strong> - for automation and intelligent workflows</li>
-                        <li><strong>M365 Copilot</strong> - for productivity enhancement in Microsoft 365</li>
-                    </ul>
-                    All other AI systems (including ChatGPT, Claude, GitHub Copilot, etc.) <strong>require IT approval</strong> before use. Please contact the IT department for assessment.
+                
+                <!-- Wizard Navigation Buttons -->
+                <div class="wizard-navigation">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="previousStep()" style="display: none;">
+                        <span data-i18n="btn.previous">← Previous</span>
+                    </button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+                        <span data-i18n="btn.next">Next →</span>
+                    </button>
+                    <button class="btn btn-primary" id="finishBtn" onclick="finishAssessment()" style="display: none;">
+                        <span data-i18n="btn.finish">🎯 View Results</span>
+                    </button>
                 </div>
                 
-                <div class="info-box scroll-reveal" style="margin-top: 15px;" id="infoBox2">
-                    <strong data-i18n="info.note">Note:</strong> <span data-i18n="info.disclaimer">This tool provides an initial risk assessment of AI systems in the context of P3 consulting projects, considering the EU AI Act and GDPR.</span>
-                </div>
                 </div>
             </div>
         </div>
