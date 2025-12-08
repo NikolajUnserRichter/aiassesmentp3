@@ -54,8 +54,8 @@
 
 .btn-primary:hover {
     transform: translate3d(0, -4px, 0) scale(1.02);
-    box-shadow: 0 12px 36px rgba(197, 229, 38, 0.45),
-                0 4px 12px rgba(197, 229, 38, 0.3);
+    box-shadow: 0 12px 36px rgba(124, 179, 66, 0.45),
+                0 4px 12px rgba(124, 179, 66, 0.3);
 }
 
 .btn-primary:active {
@@ -72,8 +72,8 @@
     background: var(--primary-color);
     color: white;
     transform: translate3d(0, -4px, 0) scale(1.02);
-    box-shadow: 0 12px 36px rgba(197, 229, 38, 0.35),
-                0 4px 12px rgba(197, 229, 38, 0.25);
+    box-shadow: 0 12px 36px rgba(124, 179, 66, 0.35),
+                0 4px 12px rgba(124, 179, 66, 0.25);
 }
 
 .btn-secondary:active {
@@ -128,7 +128,7 @@
     border-color: var(--primary-dark);
     transform: translate3d(0, -3px, 0) scale(1.05);
     box-shadow: 0 12px 28px var(--shadow-hover),
-                0 4px 12px rgba(197, 229, 38, 0.3);
+                0 4px 12px rgba(124, 179, 66, 0.3);
 }
 
 .theme-toggle:active,
@@ -288,7 +288,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, transparent 0%, rgba(197, 229, 38, 0.02) 100%);
+    background: linear-gradient(135deg, transparent 0%, rgba(124, 179, 66, 0.02) 100%);
     pointer-events: none;
 }
 
@@ -317,7 +317,7 @@
     height: clamp(20px, 3vw, 28px);
     background: linear-gradient(180deg, var(--primary-color), var(--accent-color));
     border-radius: 3px;
-    box-shadow: 0 2px 8px rgba(197, 229, 38, 0.4);
+    box-shadow: 0 2px 8px rgba(124, 179, 66, 0.4);
 }
 
 .form-group {
@@ -369,8 +369,8 @@ select:focus,
 input:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 4px rgba(197, 229, 38, 0.15),
-                0 8px 28px rgba(197, 229, 38, 0.25),
+    box-shadow: 0 0 0 4px rgba(124, 179, 66, 0.15),
+                0 8px 28px rgba(124, 179, 66, 0.25),
                 0 2px 8px rgba(0, 0, 0, 0.08);
     transform: translate3d(0, -3px, 0) scale(1.01);
 }
@@ -436,7 +436,7 @@ select option:checked {
     background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
     transform: scaleX(0);
     transition: transform var(--transition-normal);
-    box-shadow: 0 2px 8px rgba(197, 229, 38, 0.5);
+    box-shadow: 0 2px 8px rgba(124, 179, 66, 0.5);
 }
 
 .tab:hover {
