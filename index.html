@@ -1122,7 +1122,7 @@
 <!-- Sticky Header -->
 <header class="sticky-header" id="stickyHeader">
     <div class="sticky-header-content">
-        <a href="#" class="sticky-logo" onclick="scrollToTop(); return false;">P3 AI</a>
+        <a href="#hero" class="sticky-logo" onclick="scrollToTop(); return false;">P3 AI</a>
         <nav class="sticky-nav">
             <a href="#assessment" class="sticky-nav-item">Assessment</a>
             <a href="#results" class="sticky-nav-item">Results</a>
@@ -1569,11 +1569,15 @@
             
             // Update language buttons
             const langBtns = [document.getElementById('languageBtn'), document.getElementById('languageBtn2')];
-            langBtns.forEach(btn => {
+            langBtns.forEach((btn, index) => {
                 if (btn) {
-                    btn.textContent = btn === langBtns[0] ? 
-                        (currentLanguage === 'en' ? '🇩🇪' : '🇬🇧') : 
-                        lang.languageBtn;
+                    // Sticky header button (short version)
+                    if (index === 0) {
+                        btn.textContent = currentLanguage === 'en' ? '🇩🇪' : '🇬🇧';
+                    } else {
+                        // Regular button (full text version)
+                        btn.textContent = lang.languageBtn;
+                    }
                 }
             });
             
@@ -1684,12 +1688,9 @@
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
                     const targetId = this.getAttribute('href').substring(1);
-                    const targetSection = document.getElementById(targetId);
                     
-                    if (targetSection) {
-                        // Show the tab
-                        showTab(targetId);
-                    }
+                    // Show the tab first
+                    showTab(targetId);
                 });
             });
         });
@@ -2044,8 +2045,9 @@
             `;
             
             let measuresHTML = `<h3 class="section-title scroll-reveal">${lang['measures.title']}</h3>`;
+            const animationClasses = ['scroll-reveal-left', 'scroll-reveal-right'];
             assessment.measures.forEach((measure, index) => {
-                const revealClass = index % 2 === 0 ? 'scroll-reveal-left' : 'scroll-reveal-right';
+                const revealClass = animationClasses[index % 2];
                 measuresHTML += `
                     <div class="measure-item ${revealClass}">
                         <div class="measure-title">${index + 1}. ${measure.title}</div>
@@ -2057,9 +2059,11 @@
             document.getElementById('measuresContent').innerHTML = measuresHTML;
             
             // Re-setup scroll reveal for dynamically added elements
-            setTimeout(() => {
-                setupScrollReveal();
-            }, 100);
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setupScrollReveal();
+                });
+            });
         }
 
         function downloadPDF() {
