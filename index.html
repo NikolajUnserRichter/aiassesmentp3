@@ -45,6 +45,9 @@
             --radius-lg: clamp(16px, 2vw, 24px);
             --radius-xl: clamp(20px, 3vw, 32px);
             --radius-full: 9999px;
+            
+            /* Responsive grid minimum */
+            --grid-min-width: 280px;
         }
 
         [data-theme="dark"] {
@@ -188,18 +191,25 @@
                 animation: none;
             }
             
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-            
-            .risk-badge {
-                animation: none;
-            }
-            
+            .form-section,
+            .result-card,
+            .measure-item,
+            .form-group,
+            .risk-badge,
             .empty-state-icon {
-                animation: none;
+                animation: none !important;
+            }
+            
+            .container,
+            .logo-container,
+            .header,
+            .language-toggle,
+            .tab-content {
+                animation-duration: 0.01ms !important;
+            }
+            
+            * {
+                transition-duration: 0.01ms !important;
             }
         }
 
@@ -225,8 +235,7 @@
         }
 
         .container {
-            max-width: 1400px;
-            width: 95vw;
+            max-width: min(1400px, 95vw);
             margin: 0 auto;
             background: var(--card-bg);
             border-radius: clamp(20px, 3vw, 32px);
@@ -439,7 +448,7 @@
         .form-grid {
             display: grid;
             gap: clamp(20px, 3vw, 35px);
-            grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(var(--grid-min-width), 1fr));
         }
 
         .form-section {
@@ -860,6 +869,7 @@
 
         @media (max-width: 480px) {
             .form-grid {
+                --grid-min-width: 100%;
                 grid-template-columns: 1fr;
             }
         }
