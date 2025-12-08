@@ -182,6 +182,26 @@
                 opacity: 0.8;
             }
         }
+        
+        @media (prefers-reduced-motion: reduce) {
+            body::before {
+                animation: none;
+            }
+            
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .risk-badge {
+                animation: none;
+            }
+            
+            .empty-state-icon {
+                animation: none;
+            }
+        }
 
         .logo-container {
             text-align: center;
@@ -205,7 +225,8 @@
         }
 
         .container {
-            max-width: min(1400px, 95vw);
+            max-width: 1400px;
+            width: 95vw;
             margin: 0 auto;
             background: var(--card-bg);
             border-radius: clamp(20px, 3vw, 32px);
@@ -418,7 +439,7 @@
         .form-grid {
             display: grid;
             gap: clamp(20px, 3vw, 35px);
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
         }
 
         .form-section {
@@ -814,28 +835,8 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
             .logo-container img {
-                height: 60px;
-            }
-
-            .container {
-                border-radius: 16px;
-            }
-
-            .header {
-                padding: 30px 20px;
-            }
-
-            .header h1 {
-                font-size: 24px;
-            }
-
-            .header p {
-                font-size: 14px;
+                height: clamp(50px, 8vw, 60px);
             }
 
             .tabs {
@@ -844,30 +845,7 @@
             }
 
             .tab {
-                min-width: 120px;
-                padding: 15px 10px;
-                font-size: 14px;
-            }
-
-            .content {
-                padding: 25px 20px;
-            }
-
-            .form-section {
-                padding: 20px;
-            }
-
-            .section-title {
-                font-size: 18px;
-            }
-
-            .action-buttons {
-                padding: 25px 20px;
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
+                min-width: clamp(100px, 25vw, 120px);
             }
 
             .result-header {
@@ -876,26 +854,13 @@
             }
 
             .language-toggle {
-                padding: 15px 20px;
                 flex-wrap: wrap;
             }
         }
 
         @media (max-width: 480px) {
-            .header h1 {
-                font-size: 20px;
-            }
-
-            .section-title {
-                font-size: 16px;
-            }
-
-            .form-section {
-                padding: 15px;
-            }
-
-            .result-card {
-                padding: 20px;
+            .form-grid {
+                grid-template-columns: 1fr;
             }
         }
 
