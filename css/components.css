@@ -227,11 +227,16 @@
 }
 
 [data-theme="dark"] .result-card p,
-[data-theme="dark"] .result-card li {
-    color: #e0e0e0;
+[data-theme="dark"] .result-card li,
+[data-theme="dark"] .result-card td,
+[data-theme="dark"] .result-card th,
+[data-theme="dark"] .result-card span,
+[data-theme="dark"] .result-card strong {
+    color: #e8e8e8;
 }
 
-[data-theme="dark"] .result-title {
+[data-theme="dark"] .result-card h3,
+[data-theme="dark"] .result-card h4 {
     color: var(--primary-color);
 }
 
@@ -340,10 +345,20 @@
     border-left-width: 6px;
 }
 
+[data-theme="dark"] .form-section {
+    background: rgba(40, 40, 60, 0.8);
+}
+
+[data-theme="dark"] .form-section p,
+[data-theme="dark"] .form-section li,
+[data-theme="dark"] .form-section span:not(.form-label) {
+    color: #e8e8e8;
+}
+
 .section-title {
     font-size: clamp(18px, 2.5vw, 24px);
     font-weight: 800;
-    color: var(--text-secondary);
+    color: var(--midnight-blue);
     margin: 0 0 25px 0;
     display: flex;
     align-items: center;
@@ -354,6 +369,7 @@
 }
 
 [data-theme="dark"] .section-title {
+    color: var(--primary-color);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
@@ -382,7 +398,7 @@
 .form-label {
     display: block;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--midnight-blue);
     margin-bottom: 12px;
     font-size: clamp(14px, 1.5vw, 16px);
     transition: color 0.3s ease;
@@ -391,6 +407,7 @@
 }
 
 [data-theme="dark"] .form-label {
+    color: var(--primary-color);
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
@@ -468,13 +485,18 @@ select option:checked {
     cursor: pointer;
     font-weight: 700;
     font-size: clamp(14px, 1.5vw, 16px);
-    color: var(--text-muted);
+    color: var(--midnight-blue);
     transition: all var(--transition-normal);
     border-bottom: 4px solid transparent;
     position: relative;
     min-width: clamp(130px, 20vw, 160px);
     background: transparent;
     letter-spacing: 0.01em;
+    opacity: 0.7;
+}
+
+[data-theme="dark"] .tab {
+    color: var(--text-muted);
 }
 
 .tab::before {
@@ -492,13 +514,24 @@ select option:checked {
 
 .tab:hover {
     background: var(--hover-bg);
-    color: var(--text-secondary);
+    color: var(--midnight-blue);
     transform: translate3d(0, -3px, 0) scale(1.02);
+    opacity: 1;
+}
+
+[data-theme="dark"] .tab:hover {
+    color: var(--primary-color);
 }
 
 .tab.active {
-    color: var(--primary-color);
+    color: var(--midnight-blue);
     background: transparent;
+    opacity: 1;
+    font-weight: 800;
+}
+
+[data-theme="dark"] .tab.active {
+    color: var(--primary-color);
 }
 
 .tab.active::before {
@@ -540,12 +573,26 @@ select option:checked {
     border-left-width: 7px;
 }
 
+[data-theme="dark"] .measure-item {
+    background: rgba(40, 40, 60, 0.8);
+}
+
+[data-theme="dark"] .measure-item p,
+[data-theme="dark"] .measure-item li,
+[data-theme="dark"] .measure-item span {
+    color: #e8e8e8;
+}
+
 .measure-title {
     font-weight: 800;
-    color: var(--text-secondary);
+    color: var(--midnight-blue);
     margin-bottom: 10px;
     font-size: clamp(15px, 2vw, 18px);
     letter-spacing: -0.01em;
+}
+
+[data-theme="dark"] .measure-title {
+    color: var(--primary-color);
 }
 
 /* ===== INFO BOXES ===== */
@@ -567,7 +614,12 @@ select option:checked {
 
 [data-theme="dark"] .info-box {
     background: linear-gradient(135deg, rgba(30, 60, 90, 0.95) 0%, rgba(20, 50, 80, 0.95) 100%);
-    color: #e0e0e0;
+    color: #e8e8e8;
+    border-left: 5px solid var(--primary-color);
+}
+
+[data-theme="dark"] .info-box strong {
+    color: var(--primary-color);
 }
 
 .info-box:hover {
@@ -575,6 +627,11 @@ select option:checked {
     box-shadow: 0 10px 32px rgba(33, 150, 243, 0.25),
                 0 4px 12px rgba(33, 150, 243, 0.15);
     border-left-width: 6px;
+}
+
+[data-theme="dark"] .info-box:hover {
+    box-shadow: 0 10px 32px rgba(219, 255, 85, 0.25),
+                0 4px 12px rgba(219, 255, 85, 0.15);
 }
 
 /* ===== EMPTY STATE ===== */
@@ -595,4 +652,9 @@ select option:checked {
 .empty-state p {
     font-size: 16px;
     font-weight: 500;
+    color: var(--midnight-blue);
+}
+
+[data-theme="dark"] .empty-state p {
+    color: var(--text-primary);
 }
