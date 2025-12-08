@@ -240,7 +240,6 @@
         .logo-container img {
             block-size: clamp(60px, 5vw + 40px, 100px);
             inline-size: auto;
-            aspect-ratio: auto;
             filter: drop-shadow(0 4px 20px rgba(139, 92, 246, 0.3));
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s ease;
             will-change: transform;
@@ -268,7 +267,6 @@
             position: relative;
             z-index: 1;
             border: 1px solid var(--glass-border);
-            content-visibility: auto;
         }
 
         .container::before {
@@ -814,7 +812,11 @@
             transition: all 0.2s ease;
         }
 
-        [data-theme="dark"] .info-box,
+        [data-theme="dark"] .info-box {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.6) 0%, rgba(30, 64, 175, 0.6) 100%);
+            color: var(--text-secondary);
+        }
+        
         @media (prefers-color-scheme: dark) {
             :root:not([data-theme="light"]) .info-box {
                 background: linear-gradient(135deg, rgba(30, 58, 138, 0.6) 0%, rgba(30, 64, 175, 0.6) 100%);
@@ -978,8 +980,8 @@
 
         /* Smooth custom scrollbar */
         ::-webkit-scrollbar {
-            inline-size: 10px;
-            block-size: 10px;
+            width: 10px;
+            height: 10px;
         }
 
         ::-webkit-scrollbar-track {
@@ -1031,7 +1033,7 @@
 <body>
 <a href="#main-content" class="skip-to-content">Skip to main content</a>
 <div class="logo-container">
-    <img src="P3_lemonsplash.png" alt="P3 Logo - AI Risk Assessment" loading="lazy">
+    <img src="P3_lemonsplash.png" alt="P3 Logo - AI Risk Assessment">
 </div>
     <div class="container">
         <nav class="language-toggle" aria-label="Language and theme controls">
