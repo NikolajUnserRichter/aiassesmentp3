@@ -174,6 +174,10 @@
     color: var(--text-primary);
     margin-bottom: clamp(20px, 3vh, 30px);
     line-height: 1.2;
+    text-shadow: 0 2px 12px rgba(255, 255, 255, 0.95),
+                 0 4px 24px rgba(255, 255, 255, 0.85),
+                 0 8px 32px rgba(255, 255, 255, 0.7),
+                 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .intro-section p {
@@ -184,6 +188,18 @@
     max-width: 750px;
     margin-left: auto;
     margin-right: auto;
+    text-shadow: 0 2px 12px rgba(255, 255, 255, 0.95),
+                 0 4px 24px rgba(255, 255, 255, 0.85),
+                 0 8px 32px rgba(255, 255, 255, 0.7),
+                 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark mode adjustments for intro section */
+[data-theme="dark"] .intro-section h2,
+[data-theme="dark"] .intro-section p {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6),
+                 0 4px 16px rgba(0, 0, 0, 0.4),
+                 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .start-assessment-btn {
