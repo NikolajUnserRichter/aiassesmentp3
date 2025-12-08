@@ -1,8 +1,8 @@
 /**
- * CSS Custom Properties - P3 Brand Color Scheme
+ * CSS Custom Properties - Color Scheme
  * 
- * Primary Brand Color: Lime Green (#C5E526) - extracted from P3 logo
- * This vibrant, energetic color represents innovation and AI/tech forward-thinking
+ * Primary Brand Color: Green (#7cb342) - harmonious green tone
+ * This balanced, professional color represents growth and sustainability
  * 
  * Color Application Strategy:
  * - Primary: Main brand color for key elements (buttons, headings, accents)
@@ -13,38 +13,28 @@
  */
 
 :root {
-    /* ===== P3 BRAND COLORS ===== */
-    /* Primary brand color from logo */
-    --primary-color: #c5e526;
-    --primary-dark: #a8c620;
-    --primary-light: #d4ec5a;
-    
-    /* Secondary and accent colors */
-    --secondary-color: #9ccc65;
+    /* Light mode colors */
+    --primary-color: #7cb342;
+    --primary-dark: #558b2f;
+    --primary-light: #aed581;
+    --secondary-color: #66bb6a;
     --accent-color: #ffa726;
-    
-    /* ===== LIGHT MODE COLORS ===== */
-    --background-gradient-start: #f5fce8;
-    --background-gradient-end: #e0f2af;
-    
-    /* Surface colors with glassmorphism */
+    --background-gradient-start: #e8f5e9;
+    --background-gradient-end: #c5e1a5;
     --card-bg: rgba(255, 255, 255, 0.95);
     --glass-bg: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(197, 229, 38, 0.2);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --text-primary: #1b5e20;
+    --text-secondary: #558b2f;
+    --text-muted: #689f38;
     
-    /* Text colors - dark green tones for readability */
-    --text-primary: #2d5016;
-    --text-secondary: #4a7c2c;
-    --text-muted: #6b9c42;
-    
-    /* UI element colors */
     --shadow-color: rgba(0, 0, 0, 0.1);
     --shadow-hover: rgba(0, 0, 0, 0.15);
     --border-color: #e0e0e0;
-    --section-bg: #f7fce8;
+    --section-bg: #f1f8e9;
     --input-bg: #ffffff;
-    --input-border: #d4ec5a;
-    --hover-bg: #f7fce8;
+    --input-border: #c5e1a5;
+    --hover-bg: #f1f8e9;
     
     /* ===== SPACING SYSTEM ===== */
     /* Fluid spacing using clamp for responsive design */
@@ -65,43 +55,29 @@
     
     /* ===== GRID SYSTEM ===== */
     --grid-min-width: 280px;
-    
-    /* ===== TRANSITIONS ===== */
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ===== DARK MODE THEME ===== */
 [data-theme="dark"] {
-    /* Primary colors remain vibrant in dark mode */
-    --primary-color: #c5e526;
-    --primary-dark: #a8c620;
-    --primary-light: #d4ec5a;
-    
-    --secondary-color: #9ccc65;
+    /* Dark mode colors */
+    --primary-color: #9ccc65;
+    --primary-dark: #7cb342;
+    --primary-light: #c5e1a5;
+    --secondary-color: #81c784;
     --accent-color: #ffb74d;
-    
-    /* Dark backgrounds with subtle gradients */
     --background-gradient-start: #1a1a2e;
     --background-gradient-end: #16213e;
-    
-    /* Glass effects adjusted for dark mode */
     --card-bg: rgba(30, 30, 45, 0.95);
     --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(197, 229, 38, 0.15);
-    
-    /* Text colors - light for dark backgrounds */
+    --glass-border: rgba(255, 255, 255, 0.1);
     --text-primary: #e8f5e9;
-    --text-secondary: #d4ec5a;
-    --text-muted: #a8c620;
-    
-    /* UI adjustments for dark mode */
+    --text-secondary: #c5e1a5;
+    --text-muted: #a5d6a7;
     --shadow-color: rgba(0, 0, 0, 0.3);
     --shadow-hover: rgba(0, 0, 0, 0.4);
     --border-color: #424242;
     --section-bg: rgba(40, 40, 60, 0.6);
     --input-bg: rgba(50, 50, 70, 0.8);
-    --input-border: #6b9c42;
+    --input-border: #558b2f;
     --hover-bg: rgba(60, 60, 80, 0.6);
 }
