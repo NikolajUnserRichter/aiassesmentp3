@@ -42,6 +42,12 @@
     --input-border: #c5e526; /* Primary dark */
     --hover-bg: rgba(232, 255, 138, 0.35); /* Primary light with more opacity */
     
+    /* Darker variants for gradients */
+    --accent-dark: #d66957; /* Darker Flying Salmink */
+    --purple-dark: #8557d5; /* Darker Purple Rain */
+    --secondary-dark: #007d6a; /* Darker Green Day Vibe */
+    --secondary-darker: #008573; /* Even darker Green Day Vibe */
+    
     /* ===== SPACING SYSTEM ===== */
     /* Fluid spacing using clamp for responsive design */
     --space-xs: clamp(4px, 0.5vw, 8px);
