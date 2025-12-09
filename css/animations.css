@@ -3,8 +3,8 @@
  * 
  * Collection of reusable animations for the AI-themed interface:
  * - Entrance animations (fade, slide, scale)
- * - Interaction animations (pulse, shimmer)
- * - Ambient animations (floating, gradient shift)
+ * - Interaction animations (pulse)
+ * - Ambient animations (floating)
  */
 
 /* ===== ENTRANCE ANIMATIONS ===== */
@@ -62,15 +62,6 @@
     }
 }
 
-@keyframes shimmer {
-    0% {
-        background-position: -1000px 0;
-    }
-    100% {
-        background-position: 1000px 0;
-    }
-}
-
 /* ===== AMBIENT ANIMATIONS ===== */
 @keyframes parallaxFloat {
     0%, 100% {
@@ -78,15 +69,6 @@
     }
     50% {
         transform: translateY(-20px);
-    }
-}
-
-@keyframes gradientShift {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.8;
     }
 }
 
