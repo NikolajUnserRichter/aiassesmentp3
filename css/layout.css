@@ -31,8 +31,8 @@
     left: 0;
     right: 0;
     height: 200px;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-    opacity: 0.03;
+    background: linear-gradient(180deg, rgba(219, 255, 85, 0.02) 0%, transparent 100%);
+    opacity: 0.5;
     pointer-events: none;
 }
 
@@ -133,7 +133,7 @@
     left: 0;
     width: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    background: var(--primary-color);
     z-index: 1001;
     transition: width 0.1s ease;
 }
@@ -217,7 +217,7 @@
     align-items: center;
     gap: 10px;
     padding: clamp(18px, 3vw, 24px) clamp(40px, 6vw, 60px);
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: var(--primary-color);
     color: var(--midnight-blue);
     font-size: clamp(17px, 2.2vw, 22px);
     font-weight: 800;
@@ -226,11 +226,10 @@
     cursor: pointer;
     text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 10px 32px rgba(219, 255, 85, 0.5),
-                0 6px 16px rgba(0, 91, 76, 0.3);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     position: relative;
     overflow: hidden;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+    text-shadow: none;
     letter-spacing: 0.02em;
 }
 
@@ -253,10 +252,10 @@
 }
 
 .start-assessment-btn:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 16px 48px rgba(219, 255, 85, 0.6),
-                0 8px 24px rgba(0, 91, 76, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
     border-color: var(--midnight-blue);
+    background: var(--primary-dark);
 }
 
 .start-assessment-btn:active {
@@ -306,12 +305,7 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, 
-        var(--primary-light) 0%, 
-        var(--accent-color) 50%, 
-        var(--primary-light) 100%);
-    background-size: 200% 100%;
-    animation: shimmer 2s linear infinite;
+    background: var(--primary-color);
 }
 
 .header h1 {

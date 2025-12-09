@@ -18,29 +18,30 @@
     /* P3 Corporate Colors - Light Mode */
     --primary-color: #dbff55; /* Lemon Splash */
     --primary-dark: #c5e526; /* Darker variant of Lemon Splash */
-    --primary-light: #e8ff8a; /* Lighter variant of Lemon Splash */
+    --primary-light: #f0ff99; /* Lighter, more subtle variant */
     --secondary-color: #005b4c; /* Green Day Vibe */
     --accent-color: #ff7f6a; /* Flying Salmink */
     --electric-blue: #0000ff; /* Electric Blue */
     --purple-rain: #6544fe; /* Purple Rain */
     --midnight-blue: #00002d; /* Midnight Blue */
     
-    --background-gradient-start: #f5ffe8;
-    --background-gradient-end: #dbff55;
-    --card-bg: rgba(245, 255, 232, 0.85); /* Light lime with transparency for P3 color integration */
-    --glass-bg: rgba(219, 255, 85, 0.15); /* Lemon Splash tint */
-    --glass-border: rgba(197, 229, 38, 0.25); /* Primary dark tint */
+    /* Neutral backgrounds using company colors */
+    --background-color: #ffffff; /* Clean white background */
+    --background-subtle: #f8f9fa; /* Very light gray */
+    --card-bg: rgba(255, 255, 255, 0.95); /* Almost opaque white cards */
+    --glass-bg: rgba(248, 249, 250, 0.8); /* Subtle glass effect */
+    --glass-border: rgba(0, 91, 76, 0.1); /* Subtle Green Day Vibe border */
     --text-primary: #00002d; /* Midnight Blue for primary text */
     --text-secondary: #005b4c; /* Green Day Vibe for secondary text */
-    --text-muted: #4a7c6c;
+    --text-muted: #6c757d; /* Neutral gray for muted text */
     
-    --shadow-color: rgba(0, 91, 76, 0.12); /* Green Day Vibe shadow */
-    --shadow-hover: rgba(0, 91, 76, 0.18);
-    --border-color: #d4ec5a; /* Primary light for borders */
-    --section-bg: rgba(232, 255, 138, 0.25); /* Primary light with transparency */
-    --input-bg: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
-    --input-border: #c5e526; /* Primary dark */
-    --hover-bg: rgba(232, 255, 138, 0.35); /* Primary light with more opacity */
+    --shadow-color: rgba(0, 0, 0, 0.08); /* Subtle neutral shadow */
+    --shadow-hover: rgba(0, 0, 0, 0.12);
+    --border-color: #dee2e6; /* Light neutral border */
+    --section-bg: rgba(248, 249, 250, 0.6); /* Very subtle section background */
+    --input-bg: rgba(255, 255, 255, 0.9); /* Clean input background */
+    --input-border: #ced4da; /* Neutral input border */
+    --hover-bg: rgba(219, 255, 85, 0.1); /* Subtle Lemon Splash hover */
     
     /* ===== SPACING SYSTEM ===== */
     /* Fluid spacing using clamp for responsive design */
@@ -68,26 +69,27 @@
     /* P3 Corporate Colors - Dark Mode */
     --primary-color: #dbff55; /* Lemon Splash */
     --primary-dark: #c5e526;
-    --primary-light: #e8ff8a;
+    --primary-light: #f0ff99;
     --secondary-color: #008b7a; /* Lighter Green Day Vibe for dark mode */
     --accent-color: #ff7f6a; /* Flying Salmink */
     --electric-blue: #3366ff; /* Lighter Electric Blue */
     --purple-rain: #8577ff; /* Lighter Purple Rain */
     --midnight-blue: #1a1a3d;
     
-    --background-gradient-start: #0a0a0f;
-    --background-gradient-end: #1a1a2e;
-    --card-bg: rgba(30, 30, 45, 0.95);
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --text-primary: #f5ffe8;
+    /* Dark mode neutral backgrounds */
+    --background-color: #1a1a1a; /* Dark background */
+    --background-subtle: #212121; /* Slightly lighter dark */
+    --card-bg: rgba(40, 40, 40, 0.95);
+    --glass-bg: rgba(50, 50, 50, 0.6);
+    --glass-border: rgba(219, 255, 85, 0.15);
+    --text-primary: #ffffff;
     --text-secondary: #dbff55;
-    --text-muted: #a8c620;
-    --shadow-color: rgba(0, 0, 0, 0.3);
-    --shadow-hover: rgba(0, 0, 0, 0.4);
-    --border-color: #424242;
-    --section-bg: rgba(40, 40, 60, 0.6);
-    --input-bg: rgba(50, 50, 70, 0.8);
-    --input-border: #dbff55;
-    --hover-bg: rgba(60, 60, 80, 0.6);
+    --text-muted: #999999;
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --shadow-hover: rgba(0, 0, 0, 0.6);
+    --border-color: #333333;
+    --section-bg: rgba(30, 30, 30, 0.6);
+    --input-bg: rgba(40, 40, 40, 0.9);
+    --input-border: #444444;
+    --hover-bg: rgba(219, 255, 85, 0.15);
 }

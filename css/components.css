@@ -47,17 +47,17 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: var(--primary-color);
     color: var(--midnight-blue);
-    border: 3px solid var(--midnight-blue);
-    font-weight: 800;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+    border: 2px solid var(--midnight-blue);
+    font-weight: 700;
+    text-shadow: none;
 }
 
 .btn-primary:hover {
-    transform: translate3d(0, -4px, 0) scale(1.02);
-    box-shadow: 0 12px 36px rgba(219, 255, 85, 0.5),
-                0 4px 12px rgba(0, 91, 76, 0.4);
+    transform: translate3d(0, -2px, 0);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    background: var(--primary-dark);
 }
 
 .btn-primary:active {
@@ -65,17 +65,17 @@
 }
 
 .btn-secondary {
-    background: rgba(30, 30, 45, 0.85);
-    color: var(--primary-color);
-    border: 3px solid var(--primary-color);
-    font-weight: 800;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    background: var(--secondary-color);
+    color: #ffffff;
+    border: 2px solid var(--secondary-color);
+    font-weight: 700;
+    text-shadow: none;
 }
 
 [data-theme="dark"] .btn-secondary {
-    background: rgba(30, 30, 45, 0.95);
-    color: var(--primary-color);
-    border: 3px solid var(--primary-color);
+    background: var(--secondary-color);
+    color: #ffffff;
+    border: 2px solid var(--secondary-color);
 }
 
 .btn-secondary:hover {
@@ -210,7 +210,7 @@
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(180deg, var(--primary-color), var(--accent-color));
+    background: var(--primary-color);
 }
 
 .result-card:hover {
@@ -280,38 +280,38 @@
 }
 
 .risk-critical { 
-    background: linear-gradient(135deg, #ff5252 0%, #f44336 100%);
+    background: var(--accent-color); /* Flying Salmink for critical */
     color: white;
-    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(255, 127, 106, 0.3);
+    text-shadow: none;
 }
 
 .risk-high { 
-    background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%);
+    background: #ff9966; /* Lighter variant of Flying Salmink */
     color: white;
-    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(255, 153, 102, 0.3);
+    text-shadow: none;
 }
 
 .risk-medium { 
-    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
-    color: #1a1a1a;
-    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+    background: var(--primary-color); /* Lemon Splash for medium */
+    color: var(--midnight-blue);
+    box-shadow: 0 4px 12px rgba(219, 255, 85, 0.3);
+    text-shadow: none;
 }
 
 .risk-low { 
-    background: linear-gradient(135deg, #8bc34a 0%, #66bb6a 100%);
+    background: var(--secondary-color); /* Green Day Vibe for low */
     color: white;
-    box-shadow: 0 4px 15px rgba(139, 195, 74, 0.3);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 91, 76, 0.3);
+    text-shadow: none;
 }
 
 .risk-minimal { 
-    background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+    background: #008b7a; /* Lighter Green Day Vibe for minimal */
     color: white;
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 139, 122, 0.3);
+    text-shadow: none;
 }
 
 /* ===== FORMS ===== */
@@ -334,7 +334,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, transparent 0%, rgba(124, 179, 66, 0.02) 100%);
+    background: transparent;
     pointer-events: none;
 }
 
@@ -377,9 +377,9 @@
     content: '';
     width: 5px;
     height: clamp(20px, 3vw, 28px);
-    background: linear-gradient(180deg, var(--primary-color), var(--accent-color));
+    background: var(--primary-color);
     border-radius: 3px;
-    box-shadow: 0 2px 8px rgba(124, 179, 66, 0.4);
+    box-shadow: 0 2px 6px rgba(219, 255, 85, 0.3);
 }
 
 .form-group {
@@ -456,8 +456,8 @@ select option {
 }
 
 select option:checked {
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    color: white;
+    background: var(--primary-color);
+    color: var(--midnight-blue);
 }
 
 /* ===== TABS ===== */
@@ -506,10 +506,10 @@ select option:checked {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    background: var(--primary-color);
     transform: scaleX(0);
     transition: transform var(--transition-normal);
-    box-shadow: 0 2px 8px rgba(219, 255, 85, 0.5);
+    box-shadow: 0 2px 6px rgba(219, 255, 85, 0.3);
 }
 
 .tab:hover {
@@ -597,15 +597,14 @@ select option:checked {
 
 /* ===== INFO BOXES ===== */
 .info-box {
-    background: linear-gradient(135deg, rgba(227, 242, 253, 0.95) 0%, rgba(187, 222, 251, 0.95) 100%);
+    background: rgba(240, 250, 255, 0.95);
     padding: clamp(16px, 3vw, 24px);
     border-radius: clamp(10px, 1.5vw, 16px);
     margin-top: clamp(20px, 3vw, 28px);
     font-size: clamp(13px, 1.5vw, 15px);
-    color: #1a1a1a;
-    border-left: 5px solid #2196f3;
-    box-shadow: 0 6px 20px rgba(33, 150, 243, 0.15),
-                0 2px 8px rgba(33, 150, 243, 0.1);
+    color: var(--text-primary);
+    border-left: 5px solid var(--electric-blue);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     transition: all var(--transition-normal);
@@ -613,7 +612,7 @@ select option:checked {
 }
 
 [data-theme="dark"] .info-box {
-    background: linear-gradient(135deg, rgba(30, 60, 90, 0.95) 0%, rgba(20, 50, 80, 0.95) 100%);
+    background: rgba(30, 40, 50, 0.9);
     color: #e8e8e8;
     border-left: 5px solid var(--primary-color);
 }
@@ -623,15 +622,13 @@ select option:checked {
 }
 
 .info-box:hover {
-    transform: translate3d(0, -3px, 0) scale(1.01);
-    box-shadow: 0 10px 32px rgba(33, 150, 243, 0.25),
-                0 4px 12px rgba(33, 150, 243, 0.15);
+    transform: translate3d(0, -2px, 0);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     border-left-width: 6px;
 }
 
 [data-theme="dark"] .info-box:hover {
-    box-shadow: 0 10px 32px rgba(219, 255, 85, 0.25),
-                0 4px 12px rgba(219, 255, 85, 0.15);
+    box-shadow: 0 6px 20px rgba(219, 255, 85, 0.15);
 }
 
 /* ===== EMPTY STATE ===== */
