@@ -25,17 +25,6 @@ const TOTAL_STEPS = 2; // Number of wizard steps
 // Define approved AI tools list
 const APPROVED_AI_TOOLS = ['m365_copilot', 'ai_builder'];
 
-// API Configuration
-const API_CONFIG = {
-    baseUrl: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? 'http://localhost:3000' 
-        : window.location.origin,
-    endpoints: {
-        auth: '/auth',
-        assessments: '/api/assessments'
-    }
-};
-
 // Navigation delay for smooth transition when auto-navigating to results
 const AUTO_NAVIGATION_DELAY_MS = 300;
 
@@ -66,183 +55,6 @@ const DATA_SCORES = {
     'strategic_sensitive': 3,
     'personal_data': 4,
     'special_categories': 5
-};
-
-// ===== AUTHENTICATION FUNCTIONS =====
-
-/**
- * Check if user is authenticated
- */
-function isAuthenticated() {
-    return sessionStorage.getItem('accessToken') !== null;
-}
-
-/**
- * Get stored access token
- */
-function getAccessToken() {
-    return sessionStorage.getItem('accessToken');
-}
-
-/**
- * Get current user information
- */
-function getCurrentUser() {
-    const userStr = sessionStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
-}
-
-/**
- * Login with Azure AD
- */
-function login() {
-    window.location.href = `${API_CONFIG.baseUrl}${API_CONFIG.endpoints.auth}/login`;
-}
-
-/**
- * Logout user
- */
-function logout() {
-    sessionStorage.removeItem('accessToken');
-    sessionStorage.removeItem('user');
-    
-    // Update UI
-    updateAuthUI();
-    
-    // Optionally redirect to Azure AD logout
-    fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.auth}/logout`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.logoutUrl) {
-                window.location.href = data.logoutUrl;
-            }
-        })
-        .catch(error => console.error('Logout error:', error));
-}
-
-/**
- * Update authentication UI elements
- */
-function updateAuthUI() {
-    const loginSection = document.getElementById('loginSection');
-    const userSection = document.getElementById('userSection');
-    
-    if (!loginSection || !userSection) return;
-    
-    if (isAuthenticated()) {
-        const user = getCurrentUser();
-        loginSection.style.display = 'none';
-        userSection.style.display = 'block';
-        
-        const userNameEl = document.getElementById('userName');
-        if (userNameEl && user) {
-            userNameEl.textContent = user.name || user.username || 'User';
-        }
-    } else {
-        loginSection.style.display = 'block';
-        userSection.style.display = 'none';
-    }
-}
-
-/**
- * Handle OAuth callback from Azure AD
- */
-async function handleAuthCallback() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const user = urlParams.get('user');
-    
-    if (token) {
-        // Store token and user info
-        sessionStorage.setItem('accessToken', token);
-        if (user) {
-            sessionStorage.setItem('user', decodeURIComponent(user));
-        }
-        
-        // Remove query parameters and redirect to main page
-        window.history.replaceState({}, document.title, window.location.pathname);
-        updateAuthUI();
-    }
-}
-
-// ===== API FUNCTIONS =====
-
-/**
- * Save assessment to backend
- */
-async function saveAssessmentToBackend(assessment) {
-    const token = getAccessToken();
-    
-    if (!token) {
-        console.log('User not authenticated - assessment not saved to backend');
-        return null;
-    }
-    
-    try {
-        const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.assessments}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                riskLevel: assessment.riskLevel,
-                riskScore: assessment.riskScore,
-                projectType: assessment.projectType,
-                aiTool: assessment.aiTool,
-                aiUseCases: assessment.aiUseCases,
-                dataTypes: assessment.dataTypes,
-                autonomy: assessment.autonomy,
-                impact: assessment.impact,
-                transparency: assessment.transparency,
-                measures: assessment.measures
-            })
-        });
-        
-        if (!response.ok) {
-            const error = await response.json();
-            console.error('Failed to save assessment:', error);
-            return null;
-        }
-        
-        const data = await response.json();
-        console.log('Assessment saved successfully:', data.assessment.id);
-        return data.assessment;
-    } catch (error) {
-        console.error('Error saving assessment:', error);
-        return null;
-    }
-}
-
-/**
- * Load user's previous assessments
- */
-async function loadUserAssessments() {
-    const token = getAccessToken();
-    
-    if (!token) {
-        return [];
-    }
-    
-    try {
-        const response = await fetch(`${API_CONFIG.baseUrl}${API_CONFIG.endpoints.assessments}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (!response.ok) {
-            console.error('Failed to load assessments');
-            return [];
-        }
-        
-        const data = await response.json();
-        return data.assessments || [];
-    } catch (error) {
-        console.error('Error loading assessments:', error);
-        return [];
-    }
-}
 };
 
 // Theme toggle function
@@ -645,19 +457,6 @@ function calculateRisk() {
     
     currentAssessment = performAssessment(projectType, aiTool, aiUseCases, dataTypes, autonomy, impact, transparency);
     updateResults(currentAssessment);
-    
-    // Save to backend if authenticated
-    if (isAuthenticated()) {
-        saveAssessmentToBackend(currentAssessment).then(savedAssessment => {
-            if (savedAssessment) {
-                console.log('Assessment saved to database with ID:', savedAssessment.id);
-                currentAssessment.id = savedAssessment.id;
-                currentAssessment.created_at = savedAssessment.created_at;
-            }
-        }).catch(error => {
-            console.error('Failed to save assessment:', error);
-        });
-    }
     
     // Automatically navigate to results tab when form is complete
     setTimeout(() => {
@@ -1074,10 +873,6 @@ window.onload = function() {
         document.documentElement.setAttribute('data-theme', currentTheme);
         updateThemeButtons();
     }
-    
-    // Initialize authentication UI
-    handleAuthCallback();
-    updateAuthUI();
     
     // Initialize scroll effects
     initScrollEffects();

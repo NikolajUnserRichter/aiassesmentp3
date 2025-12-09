@@ -23,7 +23,7 @@ html {
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: var(--background-color);
+    background: url('../abstract-background-design-hd-summer-green-color.jpg') center/cover no-repeat fixed;
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -35,12 +35,13 @@ body {
     line-height: 1.6;
 }
 
-/* Dark mode simple background */
+/* Dark mode overlay for background image */
 [data-theme="dark"] body {
-    background: var(--background-color);
+    background: linear-gradient(rgba(10, 10, 15, 0.85), rgba(26, 26, 46, 0.85)), 
+                url('../abstract-background-design-hd-summer-green-color.jpg') center/cover no-repeat fixed;
 }
 
-/* Subtle accent background - minimal, professional */
+/* Ambient background gradient overlay for depth */
 body::before {
     content: '';
     position: fixed;
@@ -49,10 +50,12 @@ body::before {
     right: 0;
     bottom: 0;
     background: 
-        radial-gradient(circle at 10% 20%, rgba(219, 255, 85, 0.03) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(0, 91, 76, 0.03) 0%, transparent 40%);
+        radial-gradient(circle at 20% 50%, rgba(219, 255, 85, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 91, 76, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 20%, rgba(255, 127, 106, 0.06) 0%, transparent 40%);
     pointer-events: none;
     z-index: 0;
+    animation: gradientShift 15s ease-in-out infinite;
 }
 
 /* ===== ACCESSIBILITY: REDUCED MOTION ===== */
