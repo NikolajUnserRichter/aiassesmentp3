@@ -31,8 +31,8 @@
     left: 0;
     right: 0;
     height: 200px;
-    background: linear-gradient(180deg, rgba(219, 255, 85, 0.02) 0%, transparent 100%);
-    opacity: 0.5;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    opacity: 0.03;
     pointer-events: none;
 }
 
@@ -133,7 +133,7 @@
     left: 0;
     width: 0;
     height: 3px;
-    background: var(--primary-color);
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
     z-index: 1001;
     transition: width 0.1s ease;
 }
@@ -217,7 +217,7 @@
     align-items: center;
     gap: 10px;
     padding: clamp(18px, 3vw, 24px) clamp(40px, 6vw, 60px);
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     color: var(--midnight-blue);
     font-size: clamp(17px, 2.2vw, 22px);
     font-weight: 800;
@@ -226,10 +226,11 @@
     cursor: pointer;
     text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 10px 32px rgba(219, 255, 85, 0.5),
+                0 6px 16px rgba(0, 91, 76, 0.3);
     position: relative;
     overflow: hidden;
-    text-shadow: none;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
     letter-spacing: 0.02em;
 }
 
@@ -252,10 +253,10 @@
 }
 
 .start-assessment-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 16px 48px rgba(219, 255, 85, 0.6),
+                0 8px 24px rgba(0, 91, 76, 0.4);
     border-color: var(--midnight-blue);
-    background: var(--primary-dark);
 }
 
 .start-assessment-btn:active {
@@ -264,7 +265,9 @@
 
 /* ===== HEADER SECTION ===== */
 .header {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: 
+        linear-gradient(135deg, rgba(219, 255, 85, 0.92) 0%, rgba(0, 91, 76, 0.88) 100%),
+        url('../abstract-background-design-hd-summer-green-color.jpg') center/cover no-repeat;
     color: var(--midnight-blue);
     padding: clamp(120px, 20vh, 200px) clamp(20px, 5vw, 40px);
     text-align: center;
@@ -277,9 +280,11 @@
     align-items: center;
 }
 
-/* Dark mode header */
+/* Dark mode overlay for header background */
 [data-theme="dark"] .header {
-    background: linear-gradient(135deg, rgba(219, 255, 85, 0.15) 0%, rgba(0, 91, 76, 0.2) 100%), var(--background-color);
+    background: 
+        linear-gradient(135deg, rgba(219, 255, 85, 0.25) 0%, rgba(0, 139, 122, 0.35) 100%),
+        url('../abstract-background-design-hd-summer-green-color.jpg') center/cover no-repeat;
     color: white;
 }
 
@@ -290,7 +295,8 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: transparent;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 3s infinite;
 }
 
 .header::after {
@@ -300,7 +306,12 @@
     left: 0;
     right: 0;
     height: 4px;
-    background: var(--primary-color);
+    background: linear-gradient(90deg, 
+        var(--primary-light) 0%, 
+        var(--accent-color) 50%, 
+        var(--primary-light) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
 }
 
 .header h1 {
