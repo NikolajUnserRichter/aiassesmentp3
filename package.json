@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "P3 AI Risk Assessment Tool with PostgreSQL storage and Azure AD authentication",
   "main": "server/index.js",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
