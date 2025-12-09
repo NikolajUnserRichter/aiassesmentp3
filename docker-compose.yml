@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: p3_postgres
+    environment:
+      POSTGRES_DB: p3_ai_assessment
+      POSTGRES_USER: p3_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change_me_in_production}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U p3_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API Server
+  api:
+    build: .
+    container_name: p3_api
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=p3_ai_assessment
+      - DB_USER=p3_user
+      - DB_PASSWORD=${DB_PASSWORD:-change_me_in_production}
+      - AZURE_AD_CLIENT_ID=${AZURE_AD_CLIENT_ID}
+      - AZURE_AD_CLIENT_SECRET=${AZURE_AD_CLIENT_SECRET}
+      - AZURE_AD_TENANT_ID=${AZURE_AD_TENANT_ID}
+      - AZURE_AD_REDIRECT_URI=${AZURE_AD_REDIRECT_URI}
+      - PORT=3000
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:8080}
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Optional: pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: p3_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@p3.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    profiles:
+      - dev
+
+volumes:
+  postgres_data:
+    driver: local
