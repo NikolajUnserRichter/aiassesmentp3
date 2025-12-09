@@ -2,6 +2,8 @@
 
 This guide explains how to set up and configure the PostgreSQL database and Azure AD authentication for the P3 AI Risk Assessment Tool.
 
+**⚠️ SECURITY NOTICE**: This implementation is designed as a proof-of-concept/MVP. Before deploying to production, review and implement the security recommendations in this guide, particularly around token handling and validation.
+
 ## Prerequisites
 
 - Node.js (v16 or higher)
@@ -205,13 +207,35 @@ CREATE TABLE assessments (
 
 ## Security Considerations
 
+### Current Implementation (POC/Development)
+
+This implementation is designed for proof-of-concept and development purposes. The following security items need enhancement for production:
+
+1. **Token Validation**: Currently uses basic JWT decoding. Production should:
+   - Verify JWT signature using Azure AD public keys
+   - Validate issuer, audience, and expiration claims
+   - Implement proper key rotation handling
+
+2. **Token Storage**: Tokens passed via URL parameters and stored in sessionStorage:
+   - Vulnerable to XSS attacks
+   - May be logged in browser history
+   - Production should use httpOnly cookies or server-side sessions
+
+3. **Error Handling**: Database connection errors should be handled gracefully without crashing
+
+### Production Requirements
+
 1. **Never commit `.env` file** - It contains sensitive credentials
 2. **Use HTTPS in production** - Protect tokens in transit
-3. **Implement token refresh** - For long-running sessions
-4. **Rate limiting** - Already configured (100 requests per 15 minutes)
-5. **CORS** - Configure allowed origins in production
-6. **Helmet.js** - Security headers already configured
-7. **Validate all inputs** - Backend validation is in place
+3. **Implement proper JWT validation** - Verify signatures with Azure AD keys
+4. **Use httpOnly cookies** - Instead of sessionStorage for tokens
+5. **Implement token refresh** - For long-running sessions
+6. **Rate limiting** - Already configured (100 requests per 15 minutes)
+7. **CORS** - Configure allowed origins in production
+8. **Helmet.js** - Security headers already configured
+9. **Validate all inputs** - Backend validation is in place
+10. **Monitor and log** - Implement proper logging and monitoring
+11. **Regular security audits** - Review dependencies and code
 
 ## Troubleshooting
 

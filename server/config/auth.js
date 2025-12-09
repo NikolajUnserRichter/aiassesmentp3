@@ -55,11 +55,42 @@ const acquireTokenByCode = async (code) => {
 
 /**
  * Verify access token and extract user information
+ * IMPORTANT: In production, this should validate the token with Azure AD
  */
 const verifyToken = async (accessToken) => {
     try {
-        // In production, you should validate the token with Azure AD
-        // For now, we'll trust the token from MSAL
+        // TODO: In production, implement proper token validation:
+        // 1. Decode JWT header to get key ID (kid)
+        // 2. Fetch Azure AD public keys from https://login.microsoftonline.com/{tenant}/discovery/v2.0/keys
+        // 3. Verify signature using the appropriate public key
+        // 4. Validate claims (issuer, audience, expiration)
+        
+        // For MVP/development: decode and check basic structure
+        const parts = accessToken.split('.');
+        if (parts.length !== 3) {
+            console.error('Invalid token format');
+            return false;
+        }
+        
+        // Decode payload
+        const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+        
+        // Basic validation
+        if (!payload.exp || payload.exp * 1000 < Date.now()) {
+            console.error('Token expired');
+            return false;
+        }
+        
+        if (!payload.oid && !payload.sub) {
+            console.error('Token missing user identifier');
+            return false;
+        }
+        
+        // TODO: Add issuer and audience validation
+        // if (payload.iss !== `https://login.microsoftonline.com/${process.env.AZURE_AD_TENANT_ID}/v2.0`) {
+        //     return false;
+        // }
+        
         return true;
     } catch (error) {
         console.error('Token verification error:', error);

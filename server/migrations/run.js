@@ -34,7 +34,14 @@ async function runMigrations() {
         const migrationsDir = __dirname;
         const files = fs.readdirSync(migrationsDir)
             .filter(f => f.endsWith('.sql'))
-            .sort();
+            .sort(); // Files should be named with numeric prefix like 001_*, 002_*, etc.
+        
+        if (files.length === 0) {
+            console.log('No migration files found.');
+            return;
+        }
+        
+        console.log(`Found ${files.length} migration file(s)`);
         
         for (const file of files) {
             // Check if migration has already been executed

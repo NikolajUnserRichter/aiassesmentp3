@@ -41,26 +41,25 @@ router.get('/callback', async (req, res) => {
         
         const tokenResponse = await acquireTokenByCode(code);
         
-        // In a production app, you'd want to:
-        // 1. Store the token in a session or JWT
-        // 2. Redirect to the frontend with the token
-        // 3. Use httpOnly cookies for security
+        // SECURITY: For production, use httpOnly cookies or server-side sessions
+        // This implementation redirects to frontend with token as URL parameter
+        // which should only be used for development/POC
         
-        // For this implementation, we'll return the token as JSON
-        // The frontend can store it and use it for API calls
-        res.json({
-            accessToken: tokenResponse.accessToken,
-            idToken: tokenResponse.idToken,
-            account: tokenResponse.account,
-            expiresOn: tokenResponse.expiresOn,
-        });
+        // TODO: Production approach:
+        // 1. Store token in httpOnly cookie or server-side session
+        // 2. Redirect to frontend without token in URL
+        // 3. Frontend makes authenticated requests with cookies
+        
+        // For development: redirect to frontend with token
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+        const redirectUrl = `${frontendUrl}/?token=${encodeURIComponent(tokenResponse.accessToken)}&user=${encodeURIComponent(JSON.stringify(tokenResponse.account))}`;
+        
+        res.redirect(redirectUrl);
         
     } catch (error) {
         console.error('Error handling callback:', error);
-        res.status(500).json({
-            error: 'Internal Server Error',
-            message: 'Authentication failed'
-        });
+        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+        res.redirect(`${frontendUrl}/?error=authentication_failed`);
     }
 });
 

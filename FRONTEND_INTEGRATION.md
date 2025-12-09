@@ -10,6 +10,11 @@ The frontend needs to be updated to:
 3. Save assessments to the backend database
 4. Retrieve and display saved assessments
 
+**SECURITY NOTE**: This implementation uses sessionStorage for token storage and URL parameters for token passing. This is suitable for development/POC but has security implications:
+- Tokens in sessionStorage are vulnerable to XSS attacks
+- Tokens in URL parameters may be logged in browser history
+- For production, use httpOnly cookies or implement a more secure session management system
+
 ## Authentication Flow
 
 ### 1. Login Process
@@ -35,19 +40,20 @@ After Azure AD authentication, the user is redirected to `/auth/callback`, which
 // In callback handler or main page
 async function handleAuthCallback() {
     const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
     
-    if (code) {
-        // Exchange code for token via backend
-        const response = await fetch(`http://localhost:3000/auth/callback?code=${code}`);
-        const data = await response.json();
+    // Backend redirects with token as URL parameter
+    const token = urlParams.get('token');
+    const userStr = urlParams.get('user');
+    
+    if (token) {
+        // Store access token (NOTE: sessionStorage is vulnerable to XSS)
+        sessionStorage.setItem('accessToken', token);
+        if (userStr) {
+            sessionStorage.setItem('user', decodeURIComponent(userStr));
+        }
         
-        // Store access token
-        sessionStorage.setItem('accessToken', data.accessToken);
-        sessionStorage.setItem('user', JSON.stringify(data.account));
-        
-        // Redirect to main app
-        window.location.href = '/';
+        // Remove tokens from URL for security
+        window.history.replaceState({}, document.title, window.location.pathname);
     }
 }
 ```
