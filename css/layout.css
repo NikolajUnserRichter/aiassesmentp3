@@ -265,9 +265,7 @@
 
 /* ===== HEADER SECTION ===== */
 .header {
-    background: 
-        linear-gradient(135deg, rgba(219, 255, 85, 0.92) 0%, rgba(0, 91, 76, 0.88) 100%),
-        url('../abstract-background-design-hd-summer-green-color.jpg') center/cover no-repeat;
+    background: linear-gradient(135deg, rgba(219, 255, 85, 0.25) 0%, rgba(0, 91, 76, 0.15) 100%);
     color: var(--midnight-blue);
     padding: clamp(120px, 20vh, 200px) clamp(20px, 5vw, 40px);
     text-align: center;
@@ -280,11 +278,9 @@
     align-items: center;
 }
 
-/* Dark mode overlay for header background */
+/* Dark mode header background */
 [data-theme="dark"] .header {
-    background: 
-        linear-gradient(135deg, rgba(219, 255, 85, 0.25) 0%, rgba(0, 139, 122, 0.35) 100%),
-        url('../abstract-background-design-hd-summer-green-color.jpg') center/cover no-repeat;
+    background: linear-gradient(135deg, rgba(219, 255, 85, 0.12) 0%, rgba(0, 139, 122, 0.2) 100%);
     color: white;
 }
 
