@@ -264,9 +264,7 @@
 
 /* ===== HEADER SECTION ===== */
 .header {
-    background: 
-        linear-gradient(135deg, rgba(219, 255, 85, 0.92) 0%, rgba(0, 91, 76, 0.88) 100%),
-        url('../abstract-background-design-hd-summer-green-color.jpg') center/cover no-repeat;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     color: var(--midnight-blue);
     padding: clamp(120px, 20vh, 200px) clamp(20px, 5vw, 40px);
     text-align: center;
@@ -279,11 +277,9 @@
     align-items: center;
 }
 
-/* Dark mode overlay for header background */
+/* Dark mode header */
 [data-theme="dark"] .header {
-    background: 
-        linear-gradient(135deg, rgba(219, 255, 85, 0.25) 0%, rgba(0, 139, 122, 0.35) 100%),
-        url('../abstract-background-design-hd-summer-green-color.jpg') center/cover no-repeat;
+    background: linear-gradient(135deg, rgba(219, 255, 85, 0.15) 0%, rgba(0, 91, 76, 0.2) 100%), var(--background-color);
     color: white;
 }
 
@@ -294,8 +290,7 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    animation: shimmer 3s infinite;
+    background: transparent;
 }
 
 .header::after {
