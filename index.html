@@ -66,6 +66,7 @@
             <div class="tab active" onclick="showTab('assessment')" data-tab="assessment">Assessment</div>
             <div class="tab" onclick="showTab('results')" data-tab="results">Risk Analysis</div>
             <div class="tab" onclick="showTab('measures')" data-tab="measures">Recommendations</div>
+            <div class="tab" onclick="showTab('admin')" data-tab="admin">⚙️ Admin</div>
         </div>
 
         <div id="assessment" class="tab-content active scroll-section">
@@ -258,6 +259,65 @@
                         <p data-i18n="empty.measures">Please complete the assessment first.</p>
                     </div>
                 </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="admin" class="tab-content scroll-section">
+            <div class="content">
+                <div class="content-wrapper">
+                    <div class="admin-header scroll-reveal">
+                        <h2 class="section-title">⚙️ Admin Configuration</h2>
+                        <p>Manage dropdown options and selections for the assessment form.</p>
+                    </div>
+
+                    <div class="admin-actions scroll-reveal">
+                        <button class="btn btn-secondary" onclick="exportDropdownConfig()">📥 Export Config</button>
+                        <button class="btn btn-secondary" onclick="importDropdownConfig()">📤 Import Config</button>
+                        <button class="btn btn-secondary" onclick="resetToDefaults()">🔄 Reset to Defaults</button>
+                    </div>
+
+                    <div class="admin-section scroll-reveal">
+                        <h3>Project Types</h3>
+                        <div id="projectTypeAdmin" class="admin-dropdown-section"></div>
+                        <button class="btn btn-primary" onclick="addDropdownOption('projectType')">+ Add Project Type</button>
+                    </div>
+
+                    <div class="admin-section scroll-reveal">
+                        <h3>AI Tools</h3>
+                        <div id="aiToolAdmin" class="admin-dropdown-section"></div>
+                        <button class="btn btn-primary" onclick="addDropdownOption('aiTool')">+ Add AI Tool</button>
+                    </div>
+
+                    <div class="admin-section scroll-reveal">
+                        <h3>AI Use Cases</h3>
+                        <div id="aiUseCaseAdmin" class="admin-dropdown-section"></div>
+                        <button class="btn btn-primary" onclick="addDropdownOption('aiUseCase')">+ Add Use Case</button>
+                    </div>
+
+                    <div class="admin-section scroll-reveal">
+                        <h3>Data Types</h3>
+                        <div id="dataTypeAdmin" class="admin-dropdown-section"></div>
+                        <button class="btn btn-primary" onclick="addDropdownOption('dataType')">+ Add Data Type</button>
+                    </div>
+
+                    <div class="admin-section scroll-reveal">
+                        <h3>Autonomy Levels</h3>
+                        <div id="autonomyAdmin" class="admin-dropdown-section"></div>
+                        <button class="btn btn-primary" onclick="addDropdownOption('autonomy')">+ Add Autonomy Level</button>
+                    </div>
+
+                    <div class="admin-section scroll-reveal">
+                        <h3>Impact Scopes</h3>
+                        <div id="impactAdmin" class="admin-dropdown-section"></div>
+                        <button class="btn btn-primary" onclick="addDropdownOption('impact')">+ Add Impact Scope</button>
+                    </div>
+
+                    <div class="admin-section scroll-reveal">
+                        <h3>Transparency Levels</h3>
+                        <div id="transparencyAdmin" class="admin-dropdown-section"></div>
+                        <button class="btn btn-primary" onclick="addDropdownOption('transparency')">+ Add Transparency Level</button>
+                    </div>
                 </div>
             </div>
         </div>
