@@ -1270,6 +1270,19 @@ function renderAdminDropdown(fieldName, options) {
  */
 function updateDropdownOption(fieldName, index, path, value) {
     const config = getDropdownConfig();
+    
+    // Validate fieldName exists in config
+    if (!config[fieldName]) {
+        console.error(`Invalid fieldName: ${fieldName}`);
+        return;
+    }
+    
+    // Validate index is within bounds
+    if (index < 0 || index >= config[fieldName].length) {
+        console.error(`Invalid index: ${index} for fieldName: ${fieldName}`);
+        return;
+    }
+    
     const parts = path.split('.');
     
     if (parts.length === 2 && parts[0] === 'label') {
@@ -1284,6 +1297,13 @@ function updateDropdownOption(fieldName, index, path, value) {
  */
 function toggleApproval(fieldName, index) {
     const config = getDropdownConfig();
+    
+    // Validate fieldName and index
+    if (!config[fieldName] || index < 0 || index >= config[fieldName].length) {
+        console.error(`Invalid parameters for toggleApproval`);
+        return;
+    }
+    
     config[fieldName][index].approved = !config[fieldName][index].approved;
     saveDropdownConfig(config);
     renderAdminDropdown(fieldName, config[fieldName]);
@@ -1298,9 +1318,36 @@ function deleteDropdownOption(fieldName, index) {
     }
     
     const config = getDropdownConfig();
+    
+    // Validate fieldName exists and index is within bounds
+    if (!config[fieldName]) {
+        alert('Invalid field name');
+        return;
+    }
+    
+    if (index < 0 || index >= config[fieldName].length) {
+        alert('Invalid option index');
+        return;
+    }
+    
     config[fieldName].splice(index, 1);
     saveDropdownConfig(config);
     renderAdminDropdown(fieldName, config[fieldName]);
+}
+
+/**
+ * Validate value format for dropdown option
+ */
+function isValidOptionValue(value) {
+    // Check if value is non-empty and contains only lowercase letters, numbers, and underscores
+    return /^[a-z0-9_]+$/.test(value);
+}
+
+/**
+ * Check if a value already exists in the config for a given field
+ */
+function valueExists(config, fieldName, value) {
+    return config[fieldName].some(option => option.value === value);
 }
 
 /**
@@ -1310,16 +1357,35 @@ function addDropdownOption(fieldName) {
     const value = prompt('Enter the value (lowercase, no spaces, use underscores):');
     if (!value) return;
     
-    const labelEn = prompt('Enter the English label:');
-    if (!labelEn) return;
-    
-    const labelDe = prompt('Enter the German label:');
-    if (!labelDe) return;
+    // Validate value format
+    if (!isValidOptionValue(value)) {
+        alert('Invalid value format. Use only lowercase letters, numbers, and underscores.');
+        return;
+    }
     
     const config = getDropdownConfig();
+    
+    // Check for duplicate values
+    if (valueExists(config, fieldName, value)) {
+        alert('This value already exists. Please use a unique value.');
+        return;
+    }
+    
+    const labelEn = prompt('Enter the English label:');
+    if (!labelEn || labelEn.trim() === '') {
+        alert('English label is required.');
+        return;
+    }
+    
+    const labelDe = prompt('Enter the German label:');
+    if (!labelDe || labelDe.trim() === '') {
+        alert('German label is required.');
+        return;
+    }
+    
     const newOption = {
-        value: value,
-        label: { en: labelEn, de: labelDe }
+        value: value.trim(),
+        label: { en: labelEn.trim(), de: labelDe.trim() }
     };
     
     // Add approved flag for AI tools
@@ -1404,6 +1470,49 @@ function updateDropdown(fieldName, options, hasApprovalGroups) {
 }
 
 /**
+ * Validate dropdown configuration structure
+ */
+function validateDropdownConfig(config) {
+    // Check if config is an object
+    if (typeof config !== 'object' || config === null) {
+        return false;
+    }
+    
+    // Required fields
+    const requiredFields = ['projectType', 'aiTool', 'aiUseCase', 'dataType', 'autonomy', 'impact', 'transparency'];
+    
+    // Check all required fields exist
+    for (const field of requiredFields) {
+        if (!Array.isArray(config[field])) {
+            return false;
+        }
+        
+        // Validate each option in the field
+        for (const option of config[field]) {
+            // Check required properties
+            if (!option.value || typeof option.value !== 'string') {
+                return false;
+            }
+            
+            if (!option.label || typeof option.label !== 'object') {
+                return false;
+            }
+            
+            if (!option.label.en || !option.label.de) {
+                return false;
+            }
+            
+            // For aiTool, approved field is required
+            if (field === 'aiTool' && typeof option.approved !== 'boolean') {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+/**
  * Export dropdown configuration
  */
 function exportDropdownConfig() {
@@ -1432,6 +1541,13 @@ function importDropdownConfig() {
         reader.onload = (event) => {
             try {
                 const config = JSON.parse(event.target.result);
+                
+                // Validate configuration structure
+                if (!validateDropdownConfig(config)) {
+                    alert('Error: Invalid configuration format. Please ensure the file contains a valid dropdown configuration.');
+                    return;
+                }
+                
                 saveDropdownConfig(config);
                 initAdminSection();
                 alert('Configuration imported successfully!');
