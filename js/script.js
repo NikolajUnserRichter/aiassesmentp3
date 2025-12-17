@@ -30,6 +30,8 @@ const APPROVED_AI_TOOLS = ['m365_copilot', 'ai_builder'];
 const AUTO_NAVIGATION_DELAY_MS = 300;
 
 // Admin password hash (SHA-256 of "admin123") - in production, use a proper authentication system
+// NOTE: This is a client-side password protection for preventing casual/accidental access.
+// For production use, implement server-side authentication with proper security measures.
 const ADMIN_PASSWORD_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
 
 // Maximum risk score components: autonomy(5) + data(5) + impact(5) + transparency(2) + unapproved_tool(3) = 20
