@@ -331,6 +331,65 @@
         </div>
     </div>
 
+    <!-- Admin Password Modal -->
+    <div id="adminPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔒 <span data-i18n="modal.adminAuth">Admin Authentication</span></h2>
+            </div>
+            <div class="modal-body">
+                <p data-i18n="modal.enterPassword">Please enter the admin password to access the admin section:</p>
+                <div class="form-group">
+                    <label class="form-label" data-i18n="modal.password">Password:</label>
+                    <input type="password" id="adminPasswordInput" placeholder="Enter password..." autocomplete="off">
+                    <div id="passwordError" class="error-message" style="display: none;"></div>
+                </div>
+                <p style="font-size: 0.9em; color: var(--text-color-muted); margin-top: 12px;">
+                    <strong data-i18n="modal.note">Note:</strong> <span data-i18n="modal.defaultPassword">Default password is</span> <code style="background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 3px;">admin123</code>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAdminPasswordModal()"><span data-i18n="btn.cancel">Cancel</span></button>
+                <button class="btn btn-primary" onclick="submitAdminPassword()"><span data-i18n="btn.login">Login</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Option Modal -->
+    <div id="addOptionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>➕ <span data-i18n="modal.addOption">Add New Option</span></h2>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" data-i18n="modal.value">Value (lowercase, no spaces, use underscores):</label>
+                    <input type="text" id="optionValue" placeholder="e.g., new_option_value" autocomplete="off">
+                    <div id="valueError" class="error-message" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" data-i18n="modal.labelEn">Label (English):</label>
+                    <input type="text" id="optionLabelEn" placeholder="Enter English label..." autocomplete="off">
+                    <div id="labelEnError" class="error-message" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" data-i18n="modal.labelDe">Label (German):</label>
+                    <input type="text" id="optionLabelDe" placeholder="Enter German label..." autocomplete="off">
+                    <div id="labelDeError" class="error-message" style="display: none;"></div>
+                </div>
+                <div id="approvalSection" class="form-group" style="display: none;">
+                    <label class="form-label">
+                        <input type="checkbox" id="optionApproved" style="width: auto; margin-right: 8px;">
+                        <span data-i18n="modal.approved">Is this AI tool approved?</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAddOptionModal()"><span data-i18n="btn.cancel">Cancel</span></button>
+                <button class="btn btn-primary" onclick="submitAddOption()"><span data-i18n="btn.add">Add</span></button>
+            </div>
+        </div>
+    </div>
 
     <!-- External JavaScript - Application Logic -->
     <script src="js/script.js"></script>
