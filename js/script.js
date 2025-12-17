@@ -461,13 +461,6 @@ function promptAdminPassword() {
     const modal = document.getElementById('adminPasswordModal');
     if (modal) {
         modal.classList.add('show');
-        
-        // Add Enter key handler
-        passwordInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                submitAdminPassword();
-            }
-        });
     }
 }
 
@@ -1066,6 +1059,26 @@ function setupModalHandlers() {
             }
         }
     });
+    
+    // Add Enter key handlers for modal inputs (one-time setup)
+    const adminPasswordInput = document.getElementById('adminPasswordInput');
+    if (adminPasswordInput) {
+        adminPasswordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitAdminPassword();
+            }
+        });
+    }
+    
+    // Add Enter key handlers for add option modal inputs (one-time setup)
+    const addOptionInputs = document.querySelectorAll('#addOptionModal input[type="text"]');
+    addOptionInputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitAddOption();
+            }
+        });
+    });
 }
 
 function updateThemeButtons() {
@@ -1594,16 +1607,6 @@ function addDropdownOption(fieldName) {
     if (modal) {
         modal.classList.add('show');
         document.getElementById('optionValue').focus();
-        
-        // Add Enter key handler for all inputs
-        const inputs = modal.querySelectorAll('input[type="text"]');
-        inputs.forEach(input => {
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    submitAddOption();
-                }
-            });
-        });
     }
 }
 
