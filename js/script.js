@@ -81,6 +81,7 @@ const translations = {
         'tab.assessment': 'Assessment',
         'tab.results': 'Risk Analysis',
         'tab.measures': 'Recommendations',
+        'tab.admin': '⚙️ Admin',
         'section.context': 'Project & AI System Context',
         'section.properties': 'AI System Properties',
         'label.projectType': 'Project Type / Area:',
@@ -180,6 +181,7 @@ const translations = {
         'tab.assessment': 'Assessment',
         'tab.results': 'Risiko-Analyse',
         'tab.measures': 'Empfehlungen',
+        'tab.admin': '⚙️ Admin',
         'section.context': 'Projekt & KI-System Kontext',
         'section.properties': 'KI-System Eigenschaften',
         'label.projectType': 'Projekttyp / Bereich:',
@@ -302,6 +304,7 @@ function updateLanguage() {
     document.querySelector('[data-tab="assessment"]').textContent = lang['tab.assessment'];
     document.querySelector('[data-tab="results"]').textContent = lang['tab.results'];
     document.querySelector('[data-tab="measures"]').textContent = lang['tab.measures'];
+    document.querySelector('[data-tab="admin"]').textContent = lang['tab.admin'];
     
     // Update all elements with data-i18n attribute
     document.querySelectorAll('[data-i18n]').forEach(element => {
@@ -339,40 +342,8 @@ function updateLanguage() {
 }
 
 function updateAIToolDropdown() {
-    const select = document.getElementById('aiTool');
-    const selectedValue = select.value;
-    const lang = translations[currentLanguage];
-    
-    const approvedLabel = currentLanguage === 'de' ? '✅ Freigegebene Tools' : '✅ Approved Tools';
-    const requiresApprovalLabel = currentLanguage === 'de' ? '⚠️ Benötigt IT-Genehmigung' : '⚠️ Requires IT Approval';
-    
-    select.innerHTML = `
-        <option value="" data-i18n="option.pleaseSelect">${lang['option.pleaseSelect']}</option>
-        <optgroup label="${approvedLabel}">
-            <option value="m365_copilot" data-i18n="option.m365Copilot">${lang['option.m365Copilot']}</option>
-            <option value="ai_builder" data-i18n="option.aiBuilder">${lang['option.aiBuilder']}</option>
-        </optgroup>
-        <optgroup label="${requiresApprovalLabel}">
-            <option value="chatgpt" data-i18n="option.chatgpt">${lang['option.chatgpt']}</option>
-            <option value="gpt4" data-i18n="option.gpt4">${lang['option.gpt4']}</option>
-            <option value="claude" data-i18n="option.claude">${lang['option.claude']}</option>
-            <option value="gemini" data-i18n="option.gemini">${lang['option.gemini']}</option>
-            <option value="github_copilot" data-i18n="option.githubCopilot">${lang['option.githubCopilot']}</option>
-            <option value="azure_openai" data-i18n="option.azureOpenai">${lang['option.azureOpenai']}</option>
-            <option value="aws_bedrock" data-i18n="option.awsBedrock">${lang['option.awsBedrock']}</option>
-            <option value="huggingface" data-i18n="option.huggingface">${lang['option.huggingface']}</option>
-            <option value="midjourney" data-i18n="option.midjourney">${lang['option.midjourney']}</option>
-            <option value="jasper" data-i18n="option.jasper">${lang['option.jasper']}</option>
-            <option value="notion_ai" data-i18n="option.notionAi">${lang['option.notionAi']}</option>
-            <option value="perplexity" data-i18n="option.perplexity">${lang['option.perplexity']}</option>
-            <option value="other" data-i18n="option.otherAI">${lang['option.otherAI']}</option>
-        </optgroup>
-    `;
-    
-    // Restore the selected value if it existed
-    if (selectedValue) {
-        select.value = selectedValue;
-    }
+    const config = getDropdownConfig();
+    updateDropdown('aiTool', config.aiTool, true);
 }
 
 function showTab(tabName) {
@@ -874,6 +845,12 @@ window.onload = function() {
         updateThemeButtons();
     }
     
+    // Initialize dropdowns with saved configuration
+    updateAllDropdowns();
+    
+    // Initialize admin section
+    initAdminSection();
+    
     // Initialize scroll effects
     initScrollEffects();
     setupScrollReveal();
@@ -1131,4 +1108,468 @@ function finishAssessment() {
 function resetWizard() {
     currentStep = 1;
     showWizardStep(1);
+}
+
+// ===== ADMIN CONFIGURATION FUNCTIONS =====
+
+/**
+ * Default dropdown configurations
+ */
+const DEFAULT_DROPDOWN_CONFIG = {
+    projectType: [
+        { value: 'strategy', label: { en: 'Strategy Consulting & Business Development', de: 'Strategieberatung & Business Development' } },
+        { value: 'digital_transformation', label: { en: 'Digital Transformation', de: 'Digitale Transformation' } },
+        { value: 'process_optimization', label: { en: 'Process Optimization & Change Management', de: 'Prozessoptimierung & Change Management' } },
+        { value: 'software_development', label: { en: 'Software Development & Implementation', de: 'Softwareentwicklung & Implementation' } },
+        { value: 'data_analytics', label: { en: 'Data Analytics & AI Solutions', de: 'Data Analytics & AI Solutions' } },
+        { value: 'automotive', label: { en: 'Automotive Engineering & Mobility', de: 'Automotive Engineering & Mobility' } },
+        { value: 'internal_operations', label: { en: 'Internal P3 Operations', de: 'Interne P3-Operationen' } }
+    ],
+    aiTool: [
+        { value: 'm365_copilot', label: { en: 'M365 Copilot', de: 'M365 Copilot' }, approved: true },
+        { value: 'ai_builder', label: { en: 'AI Builder in Power Platform', de: 'AI Builder in Power Platform' }, approved: true },
+        { value: 'chatgpt', label: { en: 'ChatGPT (OpenAI)', de: 'ChatGPT (OpenAI)' }, approved: false },
+        { value: 'gpt4', label: { en: 'GPT-4 / GPT-4o (OpenAI)', de: 'GPT-4 / GPT-4o (OpenAI)' }, approved: false },
+        { value: 'claude', label: { en: 'Claude (Anthropic)', de: 'Claude (Anthropic)' }, approved: false },
+        { value: 'gemini', label: { en: 'Google Gemini / Bard', de: 'Google Gemini / Bard' }, approved: false },
+        { value: 'github_copilot', label: { en: 'GitHub Copilot', de: 'GitHub Copilot' }, approved: false },
+        { value: 'azure_openai', label: { en: 'Azure OpenAI Service', de: 'Azure OpenAI Service' }, approved: false },
+        { value: 'aws_bedrock', label: { en: 'AWS Bedrock', de: 'AWS Bedrock' }, approved: false },
+        { value: 'huggingface', label: { en: 'HuggingFace Models', de: 'HuggingFace Models' }, approved: false },
+        { value: 'midjourney', label: { en: 'Midjourney / DALL-E (Image Gen)', de: 'Midjourney / DALL-E (Bildgenerierung)' }, approved: false },
+        { value: 'jasper', label: { en: 'Jasper AI', de: 'Jasper AI' }, approved: false },
+        { value: 'notion_ai', label: { en: 'Notion AI', de: 'Notion AI' }, approved: false },
+        { value: 'perplexity', label: { en: 'Perplexity AI', de: 'Perplexity AI' }, approved: false },
+        { value: 'other', label: { en: 'Other AI System', de: 'Anderes KI-System' }, approved: false }
+    ],
+    aiUseCase: [
+        { value: 'client_advisory', label: { en: 'Client Advisory & Insight Generation', de: 'Client Advisory & Insight Generation' } },
+        { value: 'predictive_analytics', label: { en: 'Predictive Analytics & Forecasting', de: 'Predictive Analytics & Forecasting' } },
+        { value: 'automation', label: { en: 'Process Automation', de: 'Prozessautomatisierung' } },
+        { value: 'decision_support', label: { en: 'Decision Support System', de: 'Decision Support System' } },
+        { value: 'nlp_analysis', label: { en: 'NLP & Document Analysis', de: 'NLP & Document Analysis' } },
+        { value: 'code_generation', label: { en: 'Code Generation & Testing', de: 'Code Generation & Testing' } },
+        { value: 'resource_allocation', label: { en: 'Resource & Project Allocation', de: 'Resource & Project Allocation' } },
+        { value: 'risk_assessment', label: { en: 'Risk Assessment & Compliance', de: 'Risk Assessment & Compliance' } }
+    ],
+    dataType: [
+        { value: 'public_only', label: { en: 'Public data only', de: 'Ausschließlich öffentliche Daten' } },
+        { value: 'company_general', label: { en: 'General company data (anonymized)', de: 'Allgemeine Unternehmensdaten (anonymisiert)' } },
+        { value: 'client_confidential', label: { en: 'Confidential client data', de: 'Vertrauliche Kundendaten' } },
+        { value: 'strategic_sensitive', label: { en: 'Strategically sensitive information', de: 'Strategisch sensible Informationen' } },
+        { value: 'personal_data', label: { en: 'Personal data (employees/clients)', de: 'Personenbezogene Daten (Mitarbeiter/Kunden)' } },
+        { value: 'special_categories', label: { en: 'Special categories of personal data', de: 'Besondere Kategorien personenbezogener Daten' } }
+    ],
+    autonomy: [
+        { value: 'support_only', label: { en: 'Support: AI generates suggestions/insights', de: 'Unterstützung: KI generiert Vorschläge/Insights' } },
+        { value: 'interactive', label: { en: 'Interactive: AI communicates with stakeholders', de: 'Interaktiv: KI kommuniziert mit Stakeholdern' } },
+        { value: 'semi_automated', label: { en: 'Semi-automated: AI makes preliminary decisions', de: 'Semi-automatisiert: KI trifft Vorentscheidungen' } },
+        { value: 'automated', label: { en: 'Automated: AI makes final decisions', de: 'Automatisiert: KI trifft finale Entscheidungen' } },
+        { value: 'critical_automated', label: { en: 'Critical: AI makes high-impact decisions', de: 'Kritisch: KI trifft Entscheidungen mit hoher Tragweite' } }
+    ],
+    impact: [
+        { value: 'internal_efficiency', label: { en: 'Internal efficiency (low impact)', de: 'Interne Effizienz (low impact)' } },
+        { value: 'project_support', label: { en: 'Project support (medium impact)', de: 'Projektunterstützung (medium impact)' } },
+        { value: 'client_deliverable', label: { en: 'Client deliverable (high impact)', de: 'Client Deliverable (high impact)' } },
+        { value: 'strategic_decision', label: { en: 'Strategic decision basis', de: 'Strategische Entscheidungsgrundlage' } },
+        { value: 'critical_operations', label: { en: 'Critical business processes', de: 'Kritische Geschäftsprozesse' } }
+    ],
+    transparency: [
+        { value: 'high', label: { en: 'High: Decisions fully traceable', de: 'Hoch: Entscheidungen vollständig nachvollziehbar' } },
+        { value: 'medium', label: { en: 'Medium: Key factors explainable', de: 'Mittel: Wesentliche Faktoren erklärbar' } },
+        { value: 'low', label: { en: 'Low: Black-box system', de: 'Gering: Black-Box System' } }
+    ]
+};
+
+/**
+ * Get dropdown configuration from localStorage or use defaults
+ */
+function getDropdownConfig() {
+    const stored = localStorage.getItem('dropdownConfig');
+    return stored ? JSON.parse(stored) : DEFAULT_DROPDOWN_CONFIG;
+}
+
+/**
+ * Save dropdown configuration to localStorage
+ */
+function saveDropdownConfig(config) {
+    localStorage.setItem('dropdownConfig', JSON.stringify(config));
+    updateAllDropdowns();
+}
+
+/**
+ * Initialize admin section with current configuration
+ */
+function initAdminSection() {
+    const config = getDropdownConfig();
+    
+    renderAdminDropdown('projectType', config.projectType);
+    renderAdminDropdown('aiTool', config.aiTool);
+    renderAdminDropdown('aiUseCase', config.aiUseCase);
+    renderAdminDropdown('dataType', config.dataType);
+    renderAdminDropdown('autonomy', config.autonomy);
+    renderAdminDropdown('impact', config.impact);
+    renderAdminDropdown('transparency', config.transparency);
+}
+
+/**
+ * Render admin dropdown section
+ */
+function renderAdminDropdown(fieldName, options) {
+    const container = document.getElementById(`${fieldName}Admin`);
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    options.forEach((option, index) => {
+        const div = document.createElement('div');
+        div.className = 'admin-option-item';
+        
+        const labelEn = document.createElement('input');
+        labelEn.type = 'text';
+        labelEn.value = option.label.en;
+        labelEn.placeholder = 'Label (English)';
+        labelEn.onchange = () => updateDropdownOption(fieldName, index, 'label.en', labelEn.value);
+        
+        const labelDe = document.createElement('input');
+        labelDe.type = 'text';
+        labelDe.value = option.label.de;
+        labelDe.placeholder = 'Label (Deutsch)';
+        labelDe.onchange = () => updateDropdownOption(fieldName, index, 'label.de', labelDe.value);
+        
+        const valueSpan = document.createElement('span');
+        valueSpan.className = 'admin-option-value';
+        valueSpan.textContent = option.value;
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn-delete';
+        deleteBtn.textContent = '🗑️ Delete';
+        deleteBtn.onclick = () => deleteDropdownOption(fieldName, index);
+        
+        div.appendChild(valueSpan);
+        div.appendChild(labelEn);
+        div.appendChild(labelDe);
+        
+        // Add approval toggle for AI tools
+        if (fieldName === 'aiTool') {
+            const approvalSpan = document.createElement('span');
+            approvalSpan.className = option.approved ? 'admin-option-approved' : 'admin-option-unapproved';
+            approvalSpan.textContent = option.approved ? '✅ Approved' : '⚠️ Requires Approval';
+            approvalSpan.style.cursor = 'pointer';
+            approvalSpan.onclick = () => toggleApproval(fieldName, index);
+            div.appendChild(approvalSpan);
+        }
+        
+        div.appendChild(deleteBtn);
+        container.appendChild(div);
+    });
+}
+
+/**
+ * Update a specific dropdown option
+ */
+function updateDropdownOption(fieldName, index, path, value) {
+    const config = getDropdownConfig();
+    
+    // Validate fieldName exists in config
+    if (!config[fieldName]) {
+        console.error(`Invalid fieldName: ${fieldName}`);
+        return;
+    }
+    
+    // Validate index is within bounds
+    if (index < 0 || index >= config[fieldName].length) {
+        console.error(`Invalid index: ${index} for fieldName: ${fieldName}`);
+        return;
+    }
+    
+    const parts = path.split('.');
+    
+    if (parts.length === 2 && parts[0] === 'label') {
+        config[fieldName][index].label[parts[1]] = value;
+    }
+    
+    saveDropdownConfig(config);
+}
+
+/**
+ * Toggle approval status for AI tools
+ */
+function toggleApproval(fieldName, index) {
+    const config = getDropdownConfig();
+    
+    // Validate fieldName and index
+    if (!config[fieldName] || index < 0 || index >= config[fieldName].length) {
+        console.error(`Invalid parameters for toggleApproval`);
+        return;
+    }
+    
+    config[fieldName][index].approved = !config[fieldName][index].approved;
+    saveDropdownConfig(config);
+    renderAdminDropdown(fieldName, config[fieldName]);
+}
+
+/**
+ * Delete a dropdown option
+ */
+function deleteDropdownOption(fieldName, index) {
+    if (!confirm('Are you sure you want to delete this option?')) {
+        return;
+    }
+    
+    const config = getDropdownConfig();
+    
+    // Validate fieldName exists and index is within bounds
+    if (!config[fieldName]) {
+        alert('Invalid field name');
+        return;
+    }
+    
+    if (index < 0 || index >= config[fieldName].length) {
+        alert('Invalid option index');
+        return;
+    }
+    
+    config[fieldName].splice(index, 1);
+    saveDropdownConfig(config);
+    renderAdminDropdown(fieldName, config[fieldName]);
+}
+
+/**
+ * Validate value format for dropdown option
+ */
+function isValidOptionValue(value) {
+    // Check if value is non-empty and contains only lowercase letters, numbers, and underscores
+    return /^[a-z0-9_]+$/.test(value);
+}
+
+/**
+ * Check if a value already exists in the config for a given field
+ */
+function valueExists(config, fieldName, value) {
+    return config[fieldName].some(option => option.value === value);
+}
+
+/**
+ * Add a new dropdown option
+ */
+function addDropdownOption(fieldName) {
+    const value = prompt('Enter the value (lowercase, no spaces, use underscores):');
+    if (!value) return;
+    
+    // Validate value format
+    if (!isValidOptionValue(value)) {
+        alert('Invalid value format. Use only lowercase letters, numbers, and underscores.');
+        return;
+    }
+    
+    const config = getDropdownConfig();
+    
+    // Check for duplicate values
+    if (valueExists(config, fieldName, value)) {
+        alert('This value already exists. Please use a unique value.');
+        return;
+    }
+    
+    const labelEn = prompt('Enter the English label:');
+    if (!labelEn || labelEn.trim() === '') {
+        alert('English label is required.');
+        return;
+    }
+    
+    const labelDe = prompt('Enter the German label:');
+    if (!labelDe || labelDe.trim() === '') {
+        alert('German label is required.');
+        return;
+    }
+    
+    const newOption = {
+        value: value.trim(),
+        label: { en: labelEn.trim(), de: labelDe.trim() }
+    };
+    
+    // Add approved flag for AI tools
+    if (fieldName === 'aiTool') {
+        const approved = confirm('Is this AI tool approved?');
+        newOption.approved = approved;
+    }
+    
+    config[fieldName].push(newOption);
+    saveDropdownConfig(config);
+    renderAdminDropdown(fieldName, config[fieldName]);
+}
+
+/**
+ * Update all dropdowns in the assessment form
+ */
+function updateAllDropdowns() {
+    const config = getDropdownConfig();
+    
+    updateDropdown('projectType', config.projectType, false);
+    updateDropdown('aiTool', config.aiTool, true);
+    updateDropdown('aiUseCase', config.aiUseCase, false);
+    updateDropdown('dataType', config.dataType, false);
+    updateDropdown('autonomy', config.autonomy, false);
+    updateDropdown('impact', config.impact, false);
+    updateDropdown('transparency', config.transparency, false);
+}
+
+/**
+ * Update a single dropdown in the assessment form
+ */
+function updateDropdown(fieldName, options, hasApprovalGroups) {
+    const select = document.getElementById(fieldName);
+    if (!select) return;
+    
+    const currentValue = select.value;
+    const lang = translations[currentLanguage];
+    
+    select.innerHTML = `<option value="">${lang['option.pleaseSelect']}</option>`;
+    
+    if (hasApprovalGroups && fieldName === 'aiTool') {
+        const approvedLabel = currentLanguage === 'de' ? '✅ Freigegebene Tools' : '✅ Approved Tools';
+        const requiresApprovalLabel = currentLanguage === 'de' ? '⚠️ Benötigt IT-Genehmigung' : '⚠️ Requires IT Approval';
+        
+        const approvedGroup = document.createElement('optgroup');
+        approvedGroup.label = approvedLabel;
+        
+        const unapprovedGroup = document.createElement('optgroup');
+        unapprovedGroup.label = requiresApprovalLabel;
+        
+        options.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.label[currentLanguage] || option.label.en;
+            
+            if (option.approved) {
+                approvedGroup.appendChild(opt);
+            } else {
+                unapprovedGroup.appendChild(opt);
+            }
+        });
+        
+        if (approvedGroup.children.length > 0) {
+            select.appendChild(approvedGroup);
+        }
+        if (unapprovedGroup.children.length > 0) {
+            select.appendChild(unapprovedGroup);
+        }
+    } else {
+        options.forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.label[currentLanguage] || option.label.en;
+            select.appendChild(opt);
+        });
+    }
+    
+    // Restore selected value if it still exists
+    if (currentValue) {
+        select.value = currentValue;
+    }
+}
+
+/**
+ * Validate dropdown configuration structure
+ */
+function validateDropdownConfig(config) {
+    // Check if config is an object
+    if (typeof config !== 'object' || config === null) {
+        return false;
+    }
+    
+    // Required fields
+    const requiredFields = ['projectType', 'aiTool', 'aiUseCase', 'dataType', 'autonomy', 'impact', 'transparency'];
+    
+    // Check all required fields exist
+    for (const field of requiredFields) {
+        if (!Array.isArray(config[field])) {
+            return false;
+        }
+        
+        // Validate each option in the field
+        for (const option of config[field]) {
+            // Check required properties
+            if (!option.value || typeof option.value !== 'string') {
+                return false;
+            }
+            
+            if (!option.label || typeof option.label !== 'object') {
+                return false;
+            }
+            
+            if (!option.label.en || !option.label.de) {
+                return false;
+            }
+            
+            // For aiTool, approved field is required
+            if (field === 'aiTool' && typeof option.approved !== 'boolean') {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+/**
+ * Export dropdown configuration
+ */
+function exportDropdownConfig() {
+    const config = getDropdownConfig();
+    const json = JSON.stringify(config, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `dropdown-config-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+}
+
+/**
+ * Import dropdown configuration
+ */
+function importDropdownConfig() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const config = JSON.parse(event.target.result);
+                
+                // Validate configuration structure
+                if (!validateDropdownConfig(config)) {
+                    alert('Error: Invalid configuration format. Please ensure the file contains a valid dropdown configuration.');
+                    return;
+                }
+                
+                saveDropdownConfig(config);
+                initAdminSection();
+                alert('Configuration imported successfully!');
+            } catch (error) {
+                alert('Error importing configuration: ' + error.message);
+            }
+        };
+        reader.readAsText(file);
+    };
+    
+    input.click();
+}
+
+/**
+ * Reset to default configuration
+ */
+function resetToDefaults() {
+    if (!confirm('Are you sure you want to reset all dropdown configurations to defaults? This cannot be undone.')) {
+        return;
+    }
+    
+    saveDropdownConfig(DEFAULT_DROPDOWN_CONFIG);
+    initAdminSection();
+    alert('Configuration reset to defaults!');
 }
