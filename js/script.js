@@ -170,6 +170,25 @@ const translations = {
         'risk.medium': 'Medium Risk',
         'risk.high': 'High Risk',
         'risk.critical': 'Critical Risk',
+        'modal.adminAuth': 'Admin Authentication',
+        'modal.enterPassword': 'Please enter the admin password to access the admin section:',
+        'modal.password': 'Password',
+        'modal.note': 'Note',
+        'modal.defaultPassword': 'Default password is',
+        'modal.addOption': 'Add New Option',
+        'modal.value': 'Value (lowercase, no spaces, use underscores)',
+        'modal.labelEn': 'Label (English)',
+        'modal.labelDe': 'Label (German)',
+        'modal.approved': 'Is this AI tool approved?',
+        'btn.cancel': 'Cancel',
+        'btn.login': 'Login',
+        'btn.add': 'Add',
+        'error.incorrectPassword': 'Incorrect password! Access denied.',
+        'error.invalidValue': 'Invalid value format. Use only lowercase letters, numbers, and underscores.',
+        'error.duplicateValue': 'This value already exists. Please use a unique value.',
+        'error.requiredField': 'This field is required.',
+        'success.authenticated': 'Successfully authenticated! You now have access to the admin section.',
+        'success.optionAdded': 'Option added successfully!',
         languageBtn: '🇩🇪 Deutsch'
     },
     de: {
@@ -270,6 +289,25 @@ const translations = {
         'risk.medium': 'Mittleres Risiko',
         'risk.high': 'Hohes Risiko',
         'risk.critical': 'Kritisches Risiko',
+        'modal.adminAuth': 'Admin-Authentifizierung',
+        'modal.enterPassword': 'Bitte geben Sie das Admin-Passwort ein, um auf den Admin-Bereich zuzugreifen:',
+        'modal.password': 'Passwort',
+        'modal.note': 'Hinweis',
+        'modal.defaultPassword': 'Standard-Passwort ist',
+        'modal.addOption': 'Neue Option hinzufügen',
+        'modal.value': 'Wert (kleinbuchstaben, keine leerzeichen, unterstriche verwenden)',
+        'modal.labelEn': 'Bezeichnung (Englisch)',
+        'modal.labelDe': 'Bezeichnung (Deutsch)',
+        'modal.approved': 'Ist dieses KI-Tool freigegeben?',
+        'btn.cancel': 'Abbrechen',
+        'btn.login': 'Anmelden',
+        'btn.add': 'Hinzufügen',
+        'error.incorrectPassword': 'Falsches Passwort! Zugriff verweigert.',
+        'error.invalidValue': 'Ungültiges Wertformat. Verwenden Sie nur Kleinbuchstaben, Zahlen und Unterstriche.',
+        'error.duplicateValue': 'Dieser Wert existiert bereits. Bitte verwenden Sie einen eindeutigen Wert.',
+        'error.requiredField': 'Dieses Feld ist erforderlich.',
+        'success.authenticated': 'Erfolgreich angemeldet! Sie haben nun Zugriff auf den Admin-Bereich.',
+        'success.optionAdded': 'Option erfolgreich hinzugefügt!',
         languageBtn: '🇬🇧 English'
     }
 };
@@ -405,42 +443,65 @@ async function sha256(message) {
  * Prompt for admin password
  */
 function promptAdminPassword() {
-    const password = prompt(
-        currentLanguage === 'de' 
-            ? 'Bitte geben Sie das Admin-Passwort ein:' 
-            : 'Please enter the admin password:'
-    );
+    // Clear previous input and errors
+    const passwordInput = document.getElementById('adminPasswordInput');
+    const passwordError = document.getElementById('passwordError');
     
-    if (password === null) {
-        // User cancelled
+    if (passwordInput) {
+        passwordInput.value = '';
+        passwordInput.focus();
+    }
+    
+    if (passwordError) {
+        passwordError.style.display = 'none';
+        passwordError.textContent = '';
+    }
+    
+    // Show the modal
+    const modal = document.getElementById('adminPasswordModal');
+    if (modal) {
+        modal.classList.add('show');
+    }
+}
+
+/**
+ * Close admin password modal
+ */
+function closeAdminPasswordModal() {
+    const modal = document.getElementById('adminPasswordModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+/**
+ * Submit admin password
+ */
+async function submitAdminPassword() {
+    const passwordInput = document.getElementById('adminPasswordInput');
+    const passwordError = document.getElementById('passwordError');
+    const password = passwordInput.value;
+    
+    if (!password) {
+        passwordError.textContent = translations[currentLanguage]['error.requiredField'];
+        passwordError.style.display = 'block';
         return;
     }
     
     // Verify password
-    verifyAdminPassword(password);
-}
-
-/**
- * Verify admin password
- */
-async function verifyAdminPassword(password) {
     const hash = await sha256(password);
     
     if (hash === ADMIN_PASSWORD_HASH) {
         adminAuthenticated = true;
+        closeAdminPasswordModal();
         showTab('admin');
         updateAdminUI();
-        alert(
-            currentLanguage === 'de' 
-                ? 'Erfolgreich angemeldet! Sie haben nun Zugriff auf den Admin-Bereich.' 
-                : 'Successfully authenticated! You now have access to the admin section.'
-        );
+        alert(translations[currentLanguage]['success.authenticated']);
     } else {
-        alert(
-            currentLanguage === 'de' 
-                ? 'Falsches Passwort! Zugriff verweigert.' 
-                : 'Incorrect password! Access denied.'
-        );
+        passwordError.textContent = translations[currentLanguage]['error.incorrectPassword'];
+        passwordError.style.display = 'block';
+        passwordInput.value = '';
+        passwordInput.focus();
     }
 }
 
@@ -961,7 +1022,64 @@ window.onload = function() {
     // Initialize scroll effects
     initScrollEffects();
     setupScrollReveal();
+    
+    // Setup modal click handlers
+    setupModalHandlers();
 };
+
+/**
+ * Setup modal event handlers
+ */
+function setupModalHandlers() {
+    // Close modals when clicking outside
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                if (modal.id === 'adminPasswordModal') {
+                    closeAdminPasswordModal();
+                } else if (modal.id === 'addOptionModal') {
+                    closeAddOptionModal();
+                }
+            }
+        });
+    });
+    
+    // Close modals on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const adminModal = document.getElementById('adminPasswordModal');
+            const addOptionModal = document.getElementById('addOptionModal');
+            
+            if (adminModal && adminModal.classList.contains('show')) {
+                closeAdminPasswordModal();
+            }
+            if (addOptionModal && addOptionModal.classList.contains('show')) {
+                closeAddOptionModal();
+            }
+        }
+    });
+    
+    // Add Enter key handlers for modal inputs (one-time setup)
+    const adminPasswordInput = document.getElementById('adminPasswordInput');
+    if (adminPasswordInput) {
+        adminPasswordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitAdminPassword();
+            }
+        });
+    }
+    
+    // Add Enter key handlers for add option modal inputs (one-time setup)
+    const addOptionInputs = document.querySelectorAll('#addOptionModal input[type="text"]');
+    addOptionInputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitAddOption();
+            }
+        });
+    });
+}
 
 function updateThemeButtons() {
     const themeBtns = [document.getElementById('themeBtn'), document.getElementById('themeBtn2')];
@@ -1460,50 +1578,125 @@ function valueExists(config, fieldName, value) {
 /**
  * Add a new dropdown option
  */
+let currentAddOptionFieldName = null;
+
 function addDropdownOption(fieldName) {
-    const value = prompt('Enter the value (lowercase, no spaces, use underscores):');
-    if (!value) return;
+    currentAddOptionFieldName = fieldName;
     
-    // Validate value format
-    if (!isValidOptionValue(value)) {
-        alert('Invalid value format. Use only lowercase letters, numbers, and underscores.');
+    // Clear previous input and errors
+    document.getElementById('optionValue').value = '';
+    document.getElementById('optionLabelEn').value = '';
+    document.getElementById('optionLabelDe').value = '';
+    document.getElementById('optionApproved').checked = false;
+    
+    // Hide all error messages
+    document.getElementById('valueError').style.display = 'none';
+    document.getElementById('labelEnError').style.display = 'none';
+    document.getElementById('labelDeError').style.display = 'none';
+    
+    // Show/hide approval section based on field type
+    const approvalSection = document.getElementById('approvalSection');
+    if (fieldName === 'aiTool') {
+        approvalSection.style.display = 'block';
+    } else {
+        approvalSection.style.display = 'none';
+    }
+    
+    // Show the modal
+    const modal = document.getElementById('addOptionModal');
+    if (modal) {
+        modal.classList.add('show');
+        document.getElementById('optionValue').focus();
+    }
+}
+
+/**
+ * Close add option modal
+ */
+function closeAddOptionModal() {
+    const modal = document.getElementById('addOptionModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+    currentAddOptionFieldName = null;
+}
+
+/**
+ * Submit add option
+ */
+function submitAddOption() {
+    const value = document.getElementById('optionValue').value.trim();
+    const labelEn = document.getElementById('optionLabelEn').value.trim();
+    const labelDe = document.getElementById('optionLabelDe').value.trim();
+    const approved = document.getElementById('optionApproved').checked;
+    
+    const valueError = document.getElementById('valueError');
+    const labelEnError = document.getElementById('labelEnError');
+    const labelDeError = document.getElementById('labelDeError');
+    
+    // Reset errors
+    valueError.style.display = 'none';
+    labelEnError.style.display = 'none';
+    labelDeError.style.display = 'none';
+    
+    let hasError = false;
+    
+    // Validate value
+    if (!value) {
+        valueError.textContent = translations[currentLanguage]['error.requiredField'];
+        valueError.style.display = 'block';
+        hasError = true;
+    } else if (!isValidOptionValue(value)) {
+        valueError.textContent = translations[currentLanguage]['error.invalidValue'];
+        valueError.style.display = 'block';
+        hasError = true;
+    } else {
+        // Check for duplicate values
+        const config = getDropdownConfig();
+        if (valueExists(config, currentAddOptionFieldName, value)) {
+            valueError.textContent = translations[currentLanguage]['error.duplicateValue'];
+            valueError.style.display = 'block';
+            hasError = true;
+        }
+    }
+    
+    // Validate English label
+    if (!labelEn) {
+        labelEnError.textContent = translations[currentLanguage]['error.requiredField'];
+        labelEnError.style.display = 'block';
+        hasError = true;
+    }
+    
+    // Validate German label
+    if (!labelDe) {
+        labelDeError.textContent = translations[currentLanguage]['error.requiredField'];
+        labelDeError.style.display = 'block';
+        hasError = true;
+    }
+    
+    if (hasError) {
         return;
     }
     
+    // Create new option
     const config = getDropdownConfig();
-    
-    // Check for duplicate values
-    if (valueExists(config, fieldName, value)) {
-        alert('This value already exists. Please use a unique value.');
-        return;
-    }
-    
-    const labelEn = prompt('Enter the English label:');
-    if (!labelEn || labelEn.trim() === '') {
-        alert('English label is required.');
-        return;
-    }
-    
-    const labelDe = prompt('Enter the German label:');
-    if (!labelDe || labelDe.trim() === '') {
-        alert('German label is required.');
-        return;
-    }
-    
     const newOption = {
-        value: value.trim(),
-        label: { en: labelEn.trim(), de: labelDe.trim() }
+        value: value,
+        label: { en: labelEn, de: labelDe }
     };
     
     // Add approved flag for AI tools
-    if (fieldName === 'aiTool') {
-        const approved = confirm('Is this AI tool approved?');
+    if (currentAddOptionFieldName === 'aiTool') {
         newOption.approved = approved;
     }
     
-    config[fieldName].push(newOption);
+    config[currentAddOptionFieldName].push(newOption);
     saveDropdownConfig(config);
-    renderAdminDropdown(fieldName, config[fieldName]);
+    renderAdminDropdown(currentAddOptionFieldName, config[currentAddOptionFieldName]);
+    
+    // Close modal and show success
+    closeAddOptionModal();
+    alert(translations[currentLanguage]['success.optionAdded']);
 }
 
 /**
