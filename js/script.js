@@ -17,6 +17,7 @@ let currentAssessment = null;
 let currentLanguage = 'en'; // Default language
 let currentTheme = 'light'; // Default theme
 let currentStep = 1; // Current wizard step
+let adminAuthenticated = false; // Admin authentication state
 
 // ===== CONSTANTS =====
 const SCROLL_OFFSET = 120; // Offset in pixels for smooth scrolling to keep header/tabs visible
@@ -27,6 +28,11 @@ const APPROVED_AI_TOOLS = ['m365_copilot', 'ai_builder'];
 
 // Navigation delay for smooth transition when auto-navigating to results
 const AUTO_NAVIGATION_DELAY_MS = 300;
+
+// Admin password hash (SHA-256 of "admin123") - in production, use a proper authentication system
+// NOTE: This is a client-side password protection for preventing casual/accidental access.
+// For production use, implement server-side authentication with proper security measures.
+const ADMIN_PASSWORD_HASH = '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9';
 
 // Maximum risk score components: autonomy(5) + data(5) + impact(5) + transparency(2) + unapproved_tool(3) = 20
 const MAX_RISK_SCORE = 20;
@@ -347,6 +353,12 @@ function updateAIToolDropdown() {
 }
 
 function showTab(tabName) {
+    // Check if trying to access admin tab without authentication
+    if (tabName === 'admin' && !adminAuthenticated) {
+        promptAdminPassword();
+        return;
+    }
+    
     // Remove active class from all tabs
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
@@ -373,6 +385,101 @@ function showTab(tabName) {
             top: offsetPosition,
             behavior: 'smooth'
         });
+    }
+}
+
+// ===== ADMIN PASSWORD FUNCTIONS =====
+
+/**
+ * SHA-256 hash function for password verification
+ */
+async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
+
+/**
+ * Prompt for admin password
+ */
+function promptAdminPassword() {
+    const password = prompt(
+        currentLanguage === 'de' 
+            ? 'Bitte geben Sie das Admin-Passwort ein:' 
+            : 'Please enter the admin password:'
+    );
+    
+    if (password === null) {
+        // User cancelled
+        return;
+    }
+    
+    // Verify password
+    verifyAdminPassword(password);
+}
+
+/**
+ * Verify admin password
+ */
+async function verifyAdminPassword(password) {
+    const hash = await sha256(password);
+    
+    if (hash === ADMIN_PASSWORD_HASH) {
+        adminAuthenticated = true;
+        showTab('admin');
+        updateAdminUI();
+        alert(
+            currentLanguage === 'de' 
+                ? 'Erfolgreich angemeldet! Sie haben nun Zugriff auf den Admin-Bereich.' 
+                : 'Successfully authenticated! You now have access to the admin section.'
+        );
+    } else {
+        alert(
+            currentLanguage === 'de' 
+                ? 'Falsches Passwort! Zugriff verweigert.' 
+                : 'Incorrect password! Access denied.'
+        );
+    }
+}
+
+/**
+ * Logout from admin
+ */
+function logoutAdmin() {
+    adminAuthenticated = false;
+    updateAdminUI();
+    showTab('assessment');
+    alert(
+        currentLanguage === 'de' 
+            ? 'Erfolgreich abgemeldet.' 
+            : 'Successfully logged out.'
+    );
+}
+
+/**
+ * Update admin UI based on authentication state
+ */
+function updateAdminUI() {
+    const adminHeader = document.querySelector('.admin-header');
+    if (!adminHeader) return;
+    
+    // Remove existing logout button if any
+    const existingLogout = document.getElementById('adminLogoutBtn');
+    if (existingLogout) {
+        existingLogout.remove();
+    }
+    
+    if (adminAuthenticated) {
+        // Add logout button
+        const logoutBtn = document.createElement('button');
+        logoutBtn.id = 'adminLogoutBtn';
+        logoutBtn.className = 'btn btn-secondary';
+        logoutBtn.textContent = currentLanguage === 'de' ? '🔒 Abmelden' : '🔒 Logout';
+        logoutBtn.onclick = logoutAdmin;
+        logoutBtn.style.marginTop = '10px';
+        adminHeader.appendChild(logoutBtn);
     }
 }
 
