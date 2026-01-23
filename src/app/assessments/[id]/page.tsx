@@ -27,7 +27,19 @@ import {
 import { useAuth, useRequireAuth } from '@/lib/auth/auth-context';
 import { useAppStore } from '@/store/app-store';
 import { translations } from '@/config/translations';
-import { getAssessment, deleteAssessment } from '@/lib/supabase/queries';
+// API fetch helpers
+async function fetchAssessmentApi(id: string): Promise<Assessment | null> {
+  const res = await fetch(`/api/assessments/${id}`);
+  if (!res.ok) throw new Error('Failed to fetch assessment');
+  const data = await res.json();
+  return data.error ? null : data;
+}
+
+async function deleteAssessmentApi(id: string) {
+  const res = await fetch(`/api/assessments/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to delete assessment');
+  return res.json();
+}
 import {
   RISK_LEVEL_LABELS,
   RISK_LEVEL_DESCRIPTIONS,
@@ -69,14 +81,14 @@ export default function AssessmentDetailPage() {
   }, [shouldRedirect, router]);
 
   React.useEffect(() => {
-    const fetchAssessment = async () => {
+    const loadAssessment = async () => {
       if (!assessmentId) return;
 
       try {
         setIsLoading(true);
         setError(null);
-        const data = await getAssessment(assessmentId);
-        setAssessment(data as Assessment);
+        const data = await fetchAssessmentApi(assessmentId);
+        setAssessment(data);
       } catch (err) {
         console.error('Error fetching assessment:', err);
         setError(language === 'de' ? 'Bewertung nicht gefunden' : 'Assessment not found');
@@ -85,13 +97,13 @@ export default function AssessmentDetailPage() {
       }
     };
 
-    fetchAssessment();
+    loadAssessment();
   }, [assessmentId, language]);
 
   const handleDelete = async () => {
     try {
       setIsDeleting(true);
-      await deleteAssessment(assessmentId);
+      await deleteAssessmentApi(assessmentId);
       router.push('/assessments');
     } catch (err) {
       console.error('Error deleting assessment:', err);

@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
@@ -73,9 +74,7 @@ export default function LandingPage() {
       <header className="fixed top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-lg">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-p3-lemon-splash">
-              <span className="text-lg font-bold text-p3-midnight-blue">P3</span>
-            </div>
+            <Image src="/logo.png" alt="P3" width={40} height={40} className="h-10 w-auto" />
             <span className="text-xl font-bold text-foreground">AI Assessment</span>
           </div>
           <Button onClick={handleGetStarted} variant="default">
@@ -101,9 +100,7 @@ export default function LandingPage() {
               transition={{ delay: 0.2, duration: 0.5 }}
               className="mb-8 flex justify-center"
             >
-              <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-p3-lemon-splash shadow-xl shadow-p3-lemon-splash/30">
-                <span className="text-4xl font-bold text-p3-midnight-blue">P3</span>
-              </div>
+              <Image src="/logo.png" alt="P3" width={120} height={120} className="h-28 w-auto drop-shadow-xl" />
             </motion.div>
 
             {/* Title */}
@@ -229,9 +226,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-p3-lemon-splash">
-                <span className="text-sm font-bold text-p3-midnight-blue">P3</span>
-              </div>
+              <Image src="/logo.png" alt="P3" width={32} height={32} className="h-8 w-auto" />
               <span className="text-sm text-muted-foreground">
                 © {new Date().getFullYear()} P3 Group. All rights reserved.
               </span>

@@ -4,8 +4,21 @@ import * as React from 'react';
 import { useMsal, useIsAuthenticated, useAccount } from '@azure/msal-react';
 import { InteractionStatus } from '@azure/msal-browser';
 import { loginRequest } from './msal-config';
-import { getUserByAzureId, createUser } from '@/lib/supabase/queries';
 import type { User } from '@/types';
+
+// Dev bypass check
+const DEV_AUTH_BYPASS = process.env.NEXT_PUBLIC_DEV_AUTH_BYPASS === 'true';
+
+// Mock user for dev bypass
+const MOCK_DEV_USER: User = {
+  id: '00000000-0000-0000-0000-000000000001',
+  azure_id: 'dev-azure-id-001',
+  email: 'dev@p3-group.com',
+  name: 'Dev User',
+  role: 'admin',
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+};
 
 interface AuthContextType {
   user: User | null;
@@ -15,6 +28,7 @@ interface AuthContextType {
   login: () => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
+  isDevBypass: boolean;
 }
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -23,7 +37,33 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
+// Separate provider for dev bypass mode
+function DevBypassAuthProvider({ children }: AuthProviderProps) {
+  const [user] = React.useState<User>(MOCK_DEV_USER);
+
+  const value: AuthContextType = {
+    user,
+    isAuthenticated: true,
+    isLoading: false,
+    error: null,
+    login: async () => {
+      console.log('[Dev Bypass] Login called - already authenticated');
+    },
+    logout: () => {
+      console.log('[Dev Bypass] Logout called - reloading page');
+      window.location.href = '/';
+    },
+    refreshUser: async () => {
+      console.log('[Dev Bypass] Refresh user called');
+    },
+    isDevBypass: true,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+// Production provider with Azure AD
+function AzureAuthProvider({ children }: AuthProviderProps) {
   const { instance, accounts, inProgress } = useMsal();
   const isAuthenticatedMsal = useIsAuthenticated();
   const account = useAccount(accounts[0] || {});
@@ -32,8 +72,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Sync user with Supabase when authenticated
-  const syncUserWithSupabase = React.useCallback(async () => {
+  // Sync user with database when authenticated
+  const syncUserWithDatabase = React.useCallback(async () => {
     if (!account) {
       setUser(null);
       setIsLoading(false);
@@ -44,17 +84,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsLoading(true);
       setError(null);
 
-      // Try to get existing user
-      let dbUser = await getUserByAzureId(account.localAccountId);
-
-      // Create user if doesn't exist
-      if (!dbUser) {
-        dbUser = await createUser({
+      // Call API route to sync user
+      const response = await fetch('/api/auth/sync', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           azure_id: account.localAccountId,
           email: account.username || '',
           name: account.name || account.username || 'Unknown User',
-        });
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to sync user');
       }
+
+      const dbUser = await response.json();
 
       setUser({
         id: dbUser.id,
@@ -77,13 +124,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   React.useEffect(() => {
     if (inProgress === InteractionStatus.None) {
       if (isAuthenticatedMsal && account) {
-        syncUserWithSupabase();
+        syncUserWithDatabase();
       } else {
         setUser(null);
         setIsLoading(false);
       }
     }
-  }, [isAuthenticatedMsal, account, inProgress, syncUserWithSupabase]);
+  }, [isAuthenticatedMsal, account, inProgress, syncUserWithDatabase]);
 
   const login = async () => {
     try {
@@ -103,10 +150,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const refreshUser = async () => {
-    await syncUserWithSupabase();
+    await syncUserWithDatabase();
   };
 
-  const value = {
+  const value: AuthContextType = {
     user,
     isAuthenticated: isAuthenticatedMsal && !!user,
     isLoading: isLoading || inProgress !== InteractionStatus.None,
@@ -114,9 +161,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     login,
     logout,
     refreshUser,
+    isDevBypass: false,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+// Main provider that selects between dev bypass and Azure AD
+export function AuthProvider({ children }: AuthProviderProps) {
+  if (DEV_AUTH_BYPASS) {
+    return <DevBypassAuthProvider>{children}</DevBypassAuthProvider>;
+  }
+  return <AzureAuthProvider>{children}</AzureAuthProvider>;
 }
 
 export function useAuth() {

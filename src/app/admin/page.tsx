@@ -35,7 +35,17 @@ import {
 import { useAuth, useRequireAdmin } from '@/lib/auth/auth-context';
 import { useAppStore } from '@/store/app-store';
 import { translations } from '@/config/translations';
-import { getAssessmentStats, getAuditLogs } from '@/lib/supabase/queries';
+// API fetch helpers
+async function fetchStats() {
+  const res = await fetch('/api/stats');
+  if (!res.ok) throw new Error('Failed to fetch stats');
+  return res.json();
+}
+
+async function fetchAuditLogs() {
+  // For now, return empty array since audit logs API is not fully implemented
+  return [];
+}
 import { formatDateTime } from '@/lib/utils';
 import {
   defaultDropdownConfig,
@@ -116,8 +126,8 @@ export default function AdminPage() {
       try {
         setIsLoading(true);
         const [statsData, logsData] = await Promise.all([
-          getAssessmentStats(),
-          getAuditLogs({ limit: 50 }),
+          fetchStats(),
+          fetchAuditLogs(),
         ]);
         setStats(statsData);
         setAuditLogs(logsData || []);

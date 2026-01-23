@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -12,9 +13,7 @@ export function Footer() {
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           {/* Logo and copyright */}
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-p3-lemon-splash">
-              <span className="text-sm font-bold text-p3-midnight-blue">P3</span>
-            </div>
+            <Image src="/logo.png" alt="P3" width={32} height={32} className="h-8 w-auto" />
             <span className="text-sm text-muted-foreground">
               © {currentYear} P3 Group. All rights reserved.
             </span>

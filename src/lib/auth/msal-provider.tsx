@@ -6,15 +6,24 @@ import { PublicClientApplication } from '@azure/msal-browser';
 import { msalConfig } from './msal-config';
 import { AuthProvider } from './auth-context';
 
+// Dev bypass check
+const DEV_AUTH_BYPASS = process.env.NEXT_PUBLIC_DEV_AUTH_BYPASS === 'true';
+
 interface MsalProviderProps {
   children: React.ReactNode;
 }
 
 export function MsalProvider({ children }: MsalProviderProps) {
   const [msalInstance, setMsalInstance] = React.useState<PublicClientApplication | null>(null);
-  const [isInitialized, setIsInitialized] = React.useState(false);
+  const [isInitialized, setIsInitialized] = React.useState(DEV_AUTH_BYPASS);
 
   React.useEffect(() => {
+    // Skip MSAL initialization in dev bypass mode
+    if (DEV_AUTH_BYPASS) {
+      console.log('[Dev Bypass] Skipping MSAL initialization');
+      return;
+    }
+
     const initMsal = async () => {
       try {
         const instance = new PublicClientApplication(msalConfig);
@@ -52,6 +61,11 @@ export function MsalProvider({ children }: MsalProviderProps) {
         </div>
       </div>
     );
+  }
+
+  // Dev bypass mode - skip MSAL provider entirely
+  if (DEV_AUTH_BYPASS) {
+    return <AuthProvider>{children}</AuthProvider>;
   }
 
   // If MSAL failed to initialize, render children without auth

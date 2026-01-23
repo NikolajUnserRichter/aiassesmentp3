@@ -12,7 +12,16 @@ import { useAssessmentStore } from '@/store/assessment-store';
 import { useAppStore } from '@/store/app-store';
 import { translations } from '@/config/translations';
 import { calculateRiskScore } from '@/lib/utils/risk-calculator';
-import { createAssessment } from '@/lib/supabase/queries';
+// API helper
+async function createAssessmentApi(data: Record<string, unknown>) {
+  const res = await fetch('/api/assessments', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Failed to create assessment');
+  return res.json();
+}
 import { aiTools } from '@/config/dropdown-options';
 
 const STEPS = ['Context', 'Properties', 'Results'];
@@ -72,7 +81,7 @@ export default function NewAssessmentPage() {
     try {
       setIsSaving(true);
 
-      await createAssessment({
+      await createAssessmentApi({
         user_id: user.id,
         project_type: formData.projectType,
         ai_tool: formData.aiTool,

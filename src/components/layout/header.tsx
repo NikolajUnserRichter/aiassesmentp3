@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   SunIcon,
@@ -65,9 +66,7 @@ export function Header() {
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-p3-lemon-splash">
-              <span className="text-lg font-bold text-p3-midnight-blue">P3</span>
-            </div>
+            <Image src="/logo.png" alt="P3" width={40} height={40} className="h-10 w-auto" />
             <span className="hidden text-xl font-bold text-foreground sm:block">
               AI Assessment
             </span>

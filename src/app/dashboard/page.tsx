@@ -25,7 +25,19 @@ import {
 import { useAuth, useRequireAuth } from '@/lib/auth/auth-context';
 import { useAppStore } from '@/store/app-store';
 import { translations } from '@/config/translations';
-import { getAssessments, getAssessmentStats } from '@/lib/supabase/queries';
+// API fetch helpers
+async function fetchAssessmentsApi(userId: string): Promise<Assessment[]> {
+  const res = await fetch(`/api/assessments?userId=${userId}`);
+  if (!res.ok) throw new Error('Failed to fetch assessments');
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
+}
+
+async function fetchStatsApi(userId: string) {
+  const res = await fetch(`/api/stats?userId=${userId}`);
+  if (!res.ok) throw new Error('Failed to fetch stats');
+  return res.json();
+}
 import { getRiskLevelBadgeColor, formatDate } from '@/lib/utils';
 import type { Assessment } from '@/types';
 
@@ -57,11 +69,11 @@ export default function DashboardPage() {
       try {
         setIsLoading(true);
         const [assessmentsData, statsData] = await Promise.all([
-          getAssessments(user.id),
-          getAssessmentStats(user.id),
+          fetchAssessmentsApi(user.id),
+          fetchStatsApi(user.id),
         ]);
 
-        setAssessments(assessmentsData as Assessment[]);
+        setAssessments(assessmentsData);
         setStats(statsData);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);

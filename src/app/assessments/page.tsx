@@ -28,7 +28,19 @@ import {
 import { useAuth, useRequireAuth } from '@/lib/auth/auth-context';
 import { useAppStore } from '@/store/app-store';
 import { translations } from '@/config/translations';
-import { getAssessments, deleteAssessment } from '@/lib/supabase/queries';
+// API fetch helpers
+async function fetchAssessmentsApi(userId: string): Promise<Assessment[]> {
+  const res = await fetch(`/api/assessments?userId=${userId}`);
+  if (!res.ok) throw new Error('Failed to fetch assessments');
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
+}
+
+async function deleteAssessmentApi(id: string) {
+  const res = await fetch(`/api/assessments/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to delete assessment');
+  return res.json();
+}
 import { formatDate } from '@/lib/utils';
 import type { Assessment } from '@/types';
 
@@ -64,13 +76,13 @@ export default function AssessmentsPage() {
   }, [shouldRedirect, router]);
 
   React.useEffect(() => {
-    const fetchAssessments = async () => {
+    const loadAssessments = async () => {
       if (!user?.id) return;
 
       try {
         setIsLoading(true);
-        const data = await getAssessments(user.id);
-        setAssessments(data as Assessment[]);
+        const data = await fetchAssessmentsApi(user.id);
+        setAssessments(data);
       } catch (error) {
         console.error('Error fetching assessments:', error);
       } finally {
@@ -79,7 +91,7 @@ export default function AssessmentsPage() {
     };
 
     if (user?.id) {
-      fetchAssessments();
+      loadAssessments();
     }
   }, [user?.id]);
 
@@ -115,7 +127,7 @@ export default function AssessmentsPage() {
 
     try {
       setIsDeleting(true);
-      await deleteAssessment(assessmentToDelete);
+      await deleteAssessmentApi(assessmentToDelete);
       setAssessments((prev) => prev.filter((a) => a.id !== assessmentToDelete));
       setDeleteModalOpen(false);
       setAssessmentToDelete(null);
